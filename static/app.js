@@ -226,6 +226,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
         }
+
+        // Duplicate finder mode toggle
+        const dupAction = document.getElementById("dup-action");
+        const dupManifestRow = document.getElementById("dup-manifest-row");
+        if (dupAction && dupManifestRow) {
+            dupAction.addEventListener("change", (e) => {
+                if (e.target.value === "delete") {
+                    dupManifestRow.style.display = "block";
+                } else {
+                    dupManifestRow.style.display = "none";
+                }
+            });
+            // trigger once to set initial state
+            dupAction.dispatchEvent(new Event("change"));
+        }
     }
 
     // Explicit Form Parameters Mapping
@@ -318,6 +333,10 @@ document.addEventListener("DOMContentLoaded", () => {
             params.directory = document.getElementById("dup-dir").value;
             params.min_size_kb = document.getElementById("dup-min-size").value;
             params.action = document.getElementById("dup-action").value;
+            const dupManifestCb = document.getElementById("dup-manifest");
+            if (dupManifestCb) {
+                params.create_manifest = dupManifestCb.checked;
+            }
         }
         else if (formId === "form-directory_organizer") {
             params.directory = document.getElementById("org-dir").value;

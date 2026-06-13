@@ -588,8 +588,14 @@
 <select id="dup-action">
 <option value="log">Log Only (Dry Run)</option>
 <option value="delete">Delete duplicates (Keep original)</option>
+<option value="restore">Restore from Backup Manifest</option>
 </select>
 </div>
+</div>
+<div class="form-group checkbox-group" id="dup-manifest-row">
+<label>
+<input type="checkbox" id="dup-manifest" checked> Create Backup Manifest (duplicates_manifest.json)
+</label>
 </div>
 <button class="btn-run" type="submit">Scan for Duplicates</button>
 </form>
