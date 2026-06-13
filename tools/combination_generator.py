@@ -40,32 +40,36 @@ async def run(params: dict):
     yield {"type": "log", "message": f"Estimated time: {est_time}"}
 
     # Open file and write combinations in chunks to maximize I/O speed
-    chunk_size = 50000
-    buffer = []
+    chunk_size = 500000
     generated = 0
 
+    def batched(iterable, n):
+        it = iter(iterable)
+        while batch := tuple(itertools.islice(it, n)):
+            yield batch
+
+    def process_and_write(chunk, file_obj):
+        data = "\n".join(map("".join, chunk)) + "\n"
+        file_obj.write(data)
+
     try:
-        with open(output_file, 'w', encoding='utf-8') as f:
-            for combo in itertools.product(chars, repeat=length):
-                buffer.append(''.join(combo) + '\n')
-                generated += 1
-
-                # Write chunk
-                if len(buffer) >= chunk_size:
-                    f.writelines(buffer)
-                    buffer = []
-                    # Yield control to event loop to allow cancellation
-                    await asyncio.sleep(0.001)
-                    progress_percent = (generated / total_combinations) * 100
-                    yield {"type": "progress", "percent": progress_percent}
-
-            # Write remaining
-            if buffer:
-                f.writelines(buffer)
+        f = await asyncio.to_thread(open, output_file, 'w', encoding='utf-8')
+        try:
+            for chunk in batched(itertools.product(chars, repeat=length), chunk_size):
+                await asyncio.to_thread(process_and_write, chunk, f)
+                generated += len(chunk)
                 
-            yield {"type": "progress", "percent": 100.0}
-            yield {"type": "log", "message": f"Combinations successfully saved to: {output_file}"}
-            yield {"type": "success", "message": f"Successfully generated {total_combinations:,} combinations."}
+                # Yield control to event loop to allow cancellation and update progress
+                await asyncio.sleep(0)
+                progress_percent = (generated / total_combinations) * 100
+                yield {"type": "progress", "percent": progress_percent}
+
+        finally:
+            await asyncio.to_thread(f.close)
+
+        yield {"type": "progress", "percent": 100.0}
+        yield {"type": "log", "message": f"Combinations successfully saved to: {output_file}"}
+        yield {"type": "success", "message": f"Successfully generated {total_combinations:,} combinations."}
 
     except asyncio.CancelledError:
         yield {"type": "log", "message": "Generation cancelled by user."}
