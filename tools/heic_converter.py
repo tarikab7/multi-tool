@@ -1,5 +1,4 @@
 import os
-import sys
 
 # Ensure pillow_heif and Pillow are registered
 try:
