@@ -1,19 +1,20 @@
 import socket
 import asyncio
+from tools.utils import yield_log, yield_error, yield_success
 
 async def run(params: dict):
     ip = params.get("ip", "").strip()
     if not ip:
-        yield {"type": "error", "message": "IP address to validate is required."}
+        yield yield_error("IP address to validate is required.")
         return
         
-    yield {"type": "log", "message": f"Validating format patterns for {ip}..."}
+    yield yield_log(f"Validating format patterns for {ip}...")
     
     # Try IPv4
     try:
         socket.inet_pton(socket.AF_INET, ip)
         yield {"type": "found", "message": f"Result: {ip} is a valid IPv4 address."}
-        yield {"type": "success", "message": "IPv4 validation passed."}
+        yield yield_success("IPv4 validation passed.")
         return
     except socket.error:
         pass
@@ -22,9 +23,9 @@ async def run(params: dict):
     try:
         socket.inet_pton(socket.AF_INET6, ip)
         yield {"type": "found", "message": f"Result: {ip} is a valid IPv6 address."}
-        yield {"type": "success", "message": "IPv6 validation passed."}
+        yield yield_success("IPv6 validation passed.")
         return
     except socket.error:
         pass
         
-    yield {"type": "error", "message": f"Result: {ip} is NOT a valid IP address format."}
+    yield yield_error(f"Result: {ip} is NOT a valid IP address format.")

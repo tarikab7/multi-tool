@@ -1,12 +1,13 @@
 import asyncio
+from tools.utils import yield_log, yield_error, yield_success
 
 async def run(params: dict):
     text = params.get("text", "").strip()
     if not text:
-        yield {"type": "error", "message": "Input text is required."}
+        yield yield_error("Input text is required.")
         return
         
-    yield {"type": "log", "message": "Tokenizing text inputs..."}
+    yield yield_log("Tokenizing text inputs...")
     await asyncio.sleep(0.3)
     
     try:
@@ -19,6 +20,6 @@ async def run(params: dict):
         yield {"type": "found", "message": f"Words: {words}"}
         yield {"type": "found", "message": f"Lines: {lines}"}
         yield {"type": "found", "message": f"Est. Reading Time: {reading_time_min:.2f} minute(s)"}
-        yield {"type": "success", "message": "Counting finished."}
+        yield yield_success("Counting finished.")
     except Exception as e:
-        yield {"type": "error", "message": f"Command error: {str(e)}"}
+        yield yield_error(f"Command error: {str(e)}")
