@@ -1,5 +1,4 @@
 import os
-import asyncio
 
 async def run(params: dict):
     markdown_path = params.get("markdown_path", "").strip()
