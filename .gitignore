@@ -1,0 +1,25 @@
+# Python virtual environment
+venv/
+.venv/
+ENV/
+env/
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Local configuration & credentials safe database
+config.json
+credentials_safe.db
+*.enc
+
+# Log files
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db

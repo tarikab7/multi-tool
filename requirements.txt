@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+pillow
+pillow-heif
+mutagen
+spotipy
+google-api-python-client
+yt-dlp
+beautifulsoup4
+requests
+psutil
+musicbrainzngs
+cryptography
+markdown
