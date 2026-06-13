@@ -1,6 +1,6 @@
 import os
 import asyncio
-from PIL import Image, ImageFilter
+from PIL import Image
 
 async def run(params: dict):
     image_path = params.get("image_path", "").strip()
