@@ -1,5 +1,4 @@
 import json
-import asyncio
 import xml.etree.ElementTree as ET
 
 def xml_to_dict(element):
