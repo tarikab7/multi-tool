@@ -5,7 +5,7 @@ import tempfile
 import asyncio
 import subprocess
 from datetime import datetime
-from PIL import Image, UnidentifiedImageError
+from PIL import Image
 try:
     import piexif
 except ImportError:
