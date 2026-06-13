@@ -1,3 +1,4 @@
+import asyncio
 import os
 import sys
 
@@ -39,6 +40,16 @@ async def run(params: dict):
 
     yield {"type": "log", "message": f"Found {total_files} HEIC file(s). Starting conversion..."}
 
+    def convert_image(input_path, output_path):
+        # Open the image using Pillow (pillow_heif handles HEIC files automatically)
+        with Image.open(input_path) as img:
+            # Try to get existing EXIF metadata, if available.
+            exif = img.info.get("exif")
+            if exif:
+                img.save(output_path, "JPEG", exif=exif)
+            else:
+                img.save(output_path, "JPEG")
+
     converted_count = 0
     for idx, filename in enumerate(heic_files, 1):
         input_path = os.path.join(input_folder, filename)
@@ -46,14 +57,7 @@ async def run(params: dict):
         output_path = os.path.join(output_folder, output_filename)
 
         try:
-            # Open the image using Pillow (pillow_heif handles HEIC files automatically)
-            with Image.open(input_path) as img:
-                # Try to get existing EXIF metadata, if available.
-                exif = img.info.get("exif")
-                if exif:
-                    img.save(output_path, "JPEG", exif=exif)
-                else:
-                    img.save(output_path, "JPEG")
+            await asyncio.to_thread(convert_image, input_path, output_path)
             
             converted_count += 1
             yield {"type": "log", "message": f"[{idx}/{total_files}] Converted: {filename} -> {output_filename}"}
