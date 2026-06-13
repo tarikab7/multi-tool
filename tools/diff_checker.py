@@ -1,5 +1,4 @@
 import difflib
-import asyncio
 
 async def run(params: dict):
     text1 = params.get("text1", "").strip()
