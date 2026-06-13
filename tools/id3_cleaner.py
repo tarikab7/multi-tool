@@ -1,5 +1,4 @@
 import os
-import asyncio
 from mutagen.id3 import ID3
 
 async def run(params: dict):
