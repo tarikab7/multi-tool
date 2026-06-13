@@ -1,7 +1,6 @@
 import socket
 import ssl
 import datetime
-import asyncio
 
 async def run(params: dict):
     host = params.get("host", "").strip().replace("http://", "").replace("https://", "").split("/")[0].split(":")[0]
