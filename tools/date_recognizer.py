@@ -2,7 +2,7 @@ import os
 import re
 import asyncio
 from datetime import datetime
-from PIL import Image, UnidentifiedImageError
+from PIL import Image
 try:
     import piexif
 except ImportError:
