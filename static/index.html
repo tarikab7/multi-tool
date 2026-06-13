@@ -192,8 +192,44 @@
 <div class="status-indicator online"></div>
 <span class="status-text">Server: Online</span>
 </div>
+<button id="btn-settings" class="btn-clear" style="margin-top: 10px; width: 100%;">⚙️ Settings</button>
 </div>
 </aside>
+
+<!-- Settings Modal -->
+<div class="modal-browser" id="settings-modal">
+<div class="modal-browser-content">
+<div class="modal-browser-header">
+<h3>⚙️ System Settings</h3>
+<button class="modal-browser-close" id="btn-close-settings">×</button>
+</div>
+<div class="modal-browser-body">
+<form id="form-settings" class="tool-form" style="margin: 0; box-shadow: none; background: transparent;">
+<div class="form-group">
+<label for="setting-spotify-id">Spotify Client ID</label>
+<input id="setting-spotify-id" type="text" placeholder="32 hex characters" />
+</div>
+<div class="form-group">
+<label for="setting-spotify-secret">Spotify Client Secret</label>
+<input id="setting-spotify-secret" type="password" placeholder="32 hex characters" />
+</div>
+<div class="form-group">
+<label for="setting-youtube-keys">YouTube API Keys (Comma separated)</label>
+<input id="setting-youtube-keys" type="text" placeholder="AIzaSy..." />
+</div>
+<div class="form-group">
+<label for="setting-lastfm-key">Last.fm API Key</label>
+<input id="setting-lastfm-key" type="text" placeholder="32 hex characters" />
+</div>
+</form>
+<div id="settings-verify-results" style="margin-top: 15px; display: none; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 6px; font-size: 0.9em;"></div>
+</div>
+<div class="modal-browser-footer" style="display: flex; justify-content: space-between;">
+<button class="btn-run" id="btn-verify-settings" style="background: var(--color-blue); width: 48%;">Verify Keys</button>
+<button class="btn-run" id="btn-save-settings" style="width: 48%;">Save Settings</button>
+</div>
+</div>
+</div>
 <!-- Main Content Workspace -->
 <main class="workspace">
 <header class="workspace-header">

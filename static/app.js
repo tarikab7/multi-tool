@@ -787,4 +787,114 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    // === 5. SETTINGS MODAL LOGIC ===
+    const btnSettings = document.getElementById("btn-settings");
+    const settingsModal = document.getElementById("settings-modal");
+    const btnCloseSettings = document.getElementById("btn-close-settings");
+    const btnSaveSettings = document.getElementById("btn-save-settings");
+    const btnVerifySettings = document.getElementById("btn-verify-settings");
+    const settingsVerifyResults = document.getElementById("settings-verify-results");
+
+    if (btnSettings && settingsModal) {
+        btnSettings.addEventListener("click", async () => {
+            settingsModal.classList.add("show");
+            settingsVerifyResults.style.display = "none";
+            // Load current settings
+            try {
+                const response = await fetch("/api/settings");
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById("setting-spotify-id").value = data.spotify_client_id || "";
+                    document.getElementById("setting-spotify-secret").value = data.spotify_client_secret || "";
+                    document.getElementById("setting-youtube-keys").value = (data.youtube_api_keys || []).join(", ");
+                    document.getElementById("setting-lastfm-key").value = data.last_fm_api_key || "";
+                }
+            } catch (err) {
+                console.error("Failed to load settings:", err);
+            }
+        });
+
+        btnCloseSettings.addEventListener("click", () => {
+            settingsModal.classList.remove("show");
+        });
+
+        window.addEventListener("click", (e) => {
+            if (e.target === settingsModal) {
+                settingsModal.classList.remove("show");
+            }
+        });
+
+        function getSettingsData() {
+            const ytKeysStr = document.getElementById("setting-youtube-keys").value;
+            const ytKeys = ytKeysStr.split(",").map(k => k.trim()).filter(k => k);
+            return {
+                spotify_client_id: document.getElementById("setting-spotify-id").value.trim(),
+                spotify_client_secret: document.getElementById("setting-spotify-secret").value.trim(),
+                youtube_api_keys: ytKeys,
+                last_fm_api_key: document.getElementById("setting-lastfm-key").value.trim()
+            };
+        }
+
+        btnSaveSettings.addEventListener("click", async () => {
+            try {
+                const payload = getSettingsData();
+                const response = await fetch("/api/settings", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    btnSaveSettings.innerText = "Saved!";
+                    setTimeout(() => { btnSaveSettings.innerText = "Save Settings"; }, 2000);
+                } else {
+                    const errData = await response.json();
+                    alert("Error saving settings: " + JSON.stringify(errData));
+                }
+            } catch (err) {
+                alert("Failed to save settings: " + err.message);
+            }
+        });
+
+        btnVerifySettings.addEventListener("click", async () => {
+            btnVerifySettings.innerText = "Verifying...";
+            settingsVerifyResults.style.display = "block";
+            settingsVerifyResults.innerHTML = "<em>Running lightweight HTTP checks...</em>";
+
+            try {
+                const payload = getSettingsData();
+                const response = await fetch("/api/settings/verify", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    let resultsHtml = "<strong>Verification Results:</strong><br/>";
+
+                    resultsHtml += `Spotify: ${data.spotify === "valid" ? "✅ Valid" : (data.spotify === "unconfigured" ? "⚪ Unconfigured" : "❌ Invalid")}<br/>`;
+                    resultsHtml += `Last.fm: ${data.last_fm === "valid" ? "✅ Valid" : (data.last_fm === "unconfigured" ? "⚪ Unconfigured" : "❌ Invalid")}<br/>`;
+
+                    if (data.youtube.length > 0) {
+                        data.youtube.forEach((res, idx) => {
+                            resultsHtml += `YouTube Key ${idx+1}: ${res === "valid" ? "✅ Valid" : "❌ Invalid"}<br/>`;
+                        });
+                    } else {
+                        resultsHtml += `YouTube: ⚪ Unconfigured<br/>`;
+                    }
+
+                    settingsVerifyResults.innerHTML = resultsHtml;
+                } else {
+                    const errData = await response.json();
+                    settingsVerifyResults.innerHTML = `<span style="color:var(--color-red);">Error formatting or verifying: ${JSON.stringify(errData)}</span>`;
+                }
+            } catch (err) {
+                settingsVerifyResults.innerHTML = `<span style="color:var(--color-red);">Failed to verify: ${err.message}</span>`;
+            } finally {
+                btnVerifySettings.innerText = "Verify Keys";
+            }
+        });
+    }
 });

@@ -24,11 +24,21 @@ CONFIG_FILE = os.path.join(os.path.dirname(__file__), "config.json")
 # Maps task_id -> { "task": asyncio.Task, "queue": asyncio.Queue, "status": str }
 active_tasks: Dict[str, Dict[str, Any]] = {}
 
+from pydantic import Field, field_validator
+
 class Settings(BaseModel):
-    spotify_client_id: str = ""
-    spotify_client_secret: str = ""
+    spotify_client_id: str = Field(default="", pattern=r"^([a-fA-F0-9]{32})?$")
+    spotify_client_secret: str = Field(default="", pattern=r"^([a-fA-F0-9]{32})?$")
     youtube_api_keys: list[str] = []
-    last_fm_api_key: str = ""
+    last_fm_api_key: str = Field(default="", pattern=r"^([a-fA-F0-9]{32})?$")
+
+    @field_validator('youtube_api_keys')
+    @classmethod
+    def validate_youtube_keys(cls, v: list[str]) -> list[str]:
+        for key in v:
+            if key and not key.startswith("AIzaSy"):
+                raise ValueError("YouTube API keys must start with 'AIzaSy'")
+        return v
 
 def load_config() -> dict:
     if os.path.exists(CONFIG_FILE):
@@ -65,6 +75,59 @@ def get_settings():
 def update_settings(settings: Settings):
     save_config(settings.model_dump())
     return {"status": "success"}
+
+import httpx
+import base64
+
+@app.post("/api/settings/verify")
+async def verify_settings(settings: Settings):
+    results = {
+        "spotify": "unconfigured",
+        "youtube": [],
+        "last_fm": "unconfigured"
+    }
+
+    async with httpx.AsyncClient() as client:
+        # Spotify Check
+        if settings.spotify_client_id and settings.spotify_client_secret:
+            try:
+                auth_str = f"{settings.spotify_client_id}:{settings.spotify_client_secret}"
+                b64_auth_str = base64.b64encode(auth_str.encode()).decode()
+                headers = {"Authorization": f"Basic {b64_auth_str}", "Content-Type": "application/x-www-form-urlencoded"}
+                data = {"grant_type": "client_credentials"}
+                response = await client.post("https://accounts.spotify.com/api/token", headers=headers, data=data, timeout=5.0)
+                if response.status_code == 200:
+                    results["spotify"] = "valid"
+                else:
+                    results["spotify"] = "invalid"
+            except Exception:
+                results["spotify"] = "invalid"
+
+        # YouTube Check
+        for key in settings.youtube_api_keys:
+            if not key:
+                continue
+            try:
+                response = await client.get(f"https://www.googleapis.com/youtube/v3/channels?part=id&id=UC_x5XG1OV2P6uZZ5FSM9Ttw&key={key}", timeout=5.0)
+                if response.status_code == 200:
+                    results["youtube"].append("valid")
+                else:
+                    results["youtube"].append("invalid")
+            except Exception:
+                results["youtube"].append("invalid")
+
+        # Last.fm Check
+        if settings.last_fm_api_key:
+            try:
+                response = await client.get(f"http://ws.audioscrobbler.com/2.0/?method=chart.gettopartists&api_key={settings.last_fm_api_key}&format=json", timeout=5.0)
+                if response.status_code == 200:
+                    results["last_fm"] = "valid"
+                else:
+                    results["last_fm"] = "invalid"
+            except Exception:
+                results["last_fm"] = "invalid"
+
+    return results
 
 import importlib
 
