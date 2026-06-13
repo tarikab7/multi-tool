@@ -1,5 +1,4 @@
 import json
-import asyncio
 
 async def run(params: dict):
     raw_json = params.get("raw_json", "").strip()
