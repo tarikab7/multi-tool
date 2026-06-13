@@ -3,15 +3,22 @@ import asyncio
 
 def get_folder_size_sync(folder_path):
     total_size = 0
-    try:
-        for root, _, files in os.walk(folder_path):
-            for file in files:
-                filepath = os.path.join(root, file)
-                # Skip symlinks to avoid infinite loops
-                if not os.path.islink(filepath):
-                    total_size += os.path.getsize(filepath)
-    except Exception:
-        pass
+    stack = [folder_path]
+    while stack:
+        current_path = stack.pop()
+        try:
+            for entry in os.scandir(current_path):
+                try:
+                    if entry.is_symlink():
+                        continue
+                    if entry.is_file():
+                        total_size += entry.stat().st_size
+                    elif entry.is_dir():
+                        stack.append(entry.path)
+                except Exception:
+                    continue
+        except Exception:
+            pass
     return total_size
 
 def format_size(size_bytes):
@@ -38,13 +45,14 @@ async def run(params: dict):
     yield {"type": "log", "message": f"Scanning directory sizes in: {directory}..."}
 
     subfolders = []
+    main_files_size = 0
     try:
-        # Get list of immediate subdirectories
-        entries = os.listdir(directory)
-        for entry in entries:
-            path = os.path.join(directory, entry)
-            if os.path.isdir(path):
-                subfolders.append(path)
+        # Get list of immediate subdirectories and measure direct files using scandir
+        for entry in os.scandir(directory):
+            if entry.is_dir() and not entry.is_symlink():
+                subfolders.append(entry.path)
+            elif entry.is_file() and not entry.is_symlink():
+                main_files_size += entry.stat().st_size
     except Exception as e:
         yield {"type": "error", "message": f"Failed listing directories: {str(e)}"}
         return
@@ -52,8 +60,6 @@ async def run(params: dict):
     total_folders = len(subfolders)
     if total_folders == 0:
         yield {"type": "log", "message": "No subdirectories found."}
-        # Measure size of files inside main folder
-        main_files_size = sum(os.path.getsize(os.path.join(directory, f)) for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f)))
         yield {"type": "log", "message": f"Folder size (direct files only): {format_size(main_files_size)}"}
         yield {"type": "success", "message": "Analysis complete."}
         return
