@@ -3,7 +3,7 @@ import asyncio
 import subprocess
 import tempfile
 import shutil
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 
 async def get_video_duration(filepath):
     cmd = [
