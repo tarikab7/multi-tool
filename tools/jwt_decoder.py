@@ -1,6 +1,5 @@
 import json
 import base64
-import asyncio
 
 async def run(params: dict):
     jwt_str = params.get("jwt", "").strip()
