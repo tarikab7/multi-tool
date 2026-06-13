@@ -541,6 +541,8 @@ document.addEventListener("DOMContentLoaded", () => {
             star.className = "btn-pin-favorite";
             star.innerHTML = favorites.includes(tool) ? "★" : "☆";
             star.title = "Pin to Favorites";
+            star.setAttribute("aria-label", "Pin to Favorites");
+            star.setAttribute("aria-pressed", favorites.includes(tool) ? "true" : "false");
             if (favorites.includes(tool)) star.classList.add("pinned");
             
             item.appendChild(star);
@@ -560,11 +562,13 @@ document.addEventListener("DOMContentLoaded", () => {
             favorites.splice(index, 1);
             starBtn.innerHTML = "☆";
             starBtn.classList.remove("pinned");
+            starBtn.setAttribute("aria-pressed", "false");
             appendLog("System", `Unpinned from Favorites: ${tool}`, "system-line");
         } else {
             favorites.push(tool);
             starBtn.innerHTML = "★";
             starBtn.classList.add("pinned");
+            starBtn.setAttribute("aria-pressed", "true");
             appendLog("System", `Pinned to Favorites: ${tool}`, "system-line");
         }
         localStorage.setItem("antigravity-favorites", JSON.stringify(favorites));
@@ -574,9 +578,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (favorites.includes(tool)) {
                 btn.innerHTML = "★";
                 btn.classList.add("pinned");
+                btn.setAttribute("aria-pressed", "true");
             } else {
                 btn.innerHTML = "☆";
                 btn.classList.remove("pinned");
+                btn.setAttribute("aria-pressed", "false");
             }
         });
         
@@ -688,6 +694,7 @@ document.addEventListener("DOMContentLoaded", () => {
             browseBtn.className = "btn-browse-folder";
             browseBtn.innerHTML = "📁";
             browseBtn.title = "Browse file/folder";
+            browseBtn.setAttribute("aria-label", "Browse file/folder");
             wrapper.appendChild(browseBtn);
             
             browseBtn.addEventListener("click", () => {
