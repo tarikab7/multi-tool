@@ -1,5 +1,4 @@
 import socket
-import asyncio
 
 async def run(params: dict):
     ip = params.get("ip", "").strip()
