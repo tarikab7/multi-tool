@@ -1,6 +1,7 @@
 import os
 import subprocess
 import asyncio
+from .ffmpeg_helper import run_ffmpeg_with_progress
 
 async def run(params: dict):
     audio_path = params.get("audio_path", "").strip()
@@ -20,18 +21,25 @@ async def run(params: dict):
     
     # Construct FFmpeg command
     cmd = ["ffmpeg", "-y", "-i", audio_path, "-ss", start_time]
+
+    duration = None
     if end_time:
         cmd.extend(["-to", end_time])
+        try:
+            # Parse duration from start/end times if possible
+            def to_secs(t):
+                if ":" in t:
+                    parts = t.split(":")
+                    if len(parts) == 3: return float(parts[0])*3600 + float(parts[1])*60 + float(parts[2])
+                    elif len(parts) == 2: return float(parts[0])*60 + float(parts[1])
+                return float(t)
+            duration = to_secs(end_time) - to_secs(start_time)
+            if duration <= 0: duration = None
+        except Exception:
+            pass
+
     cmd.extend(["-c", "copy", output_path])
     
-    try:
-        proc = await asyncio.create_subprocess_exec(
-            *cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-        )
-        stdout, stderr = await proc.communicate()
-        if proc.returncode == 0:
-            yield {"type": "success", "message": f"Successfully trimmed audio: {output_path}"}
-        else:
-            yield {"type": "error", "message": f"FFmpeg failed: {stderr.decode()}"}
-    except Exception as e:
-        yield {"type": "error", "message": f"Error running FFmpeg: {str(e)}"}
+    success_msg = f"Successfully trimmed audio: {output_path}"
+    async for res in run_ffmpeg_with_progress(cmd, duration=duration, success_msg=success_msg):
+        yield res
