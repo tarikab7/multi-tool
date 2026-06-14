@@ -12,3 +12,7 @@ psutil
 musicbrainzngs
 cryptography
 markdown
+pytest
+pytest-asyncio
+httpx
+pytest-mock
