@@ -496,6 +496,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const theme = dot.dataset.theme;
             applyTheme(theme);
         });
+        dot.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                const theme = dot.dataset.theme;
+                applyTheme(theme);
+            }
+        });
     });
     
     function applyTheme(theme) {
@@ -509,8 +516,10 @@ document.addEventListener("DOMContentLoaded", () => {
         themeDots.forEach(dot => {
             if (dot.dataset.theme === theme) {
                 dot.classList.add("active");
+                dot.setAttribute("aria-pressed", "true");
             } else {
                 dot.classList.remove("active");
+                dot.setAttribute("aria-pressed", "false");
             }
         });
         
@@ -539,9 +548,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const star = document.createElement("button");
             star.type = "button";
             star.className = "btn-pin-favorite";
-            star.innerHTML = favorites.includes(tool) ? "★" : "☆";
+            const isFav = favorites.includes(tool);
+            star.innerHTML = isFav ? "★" : "☆";
             star.title = "Pin to Favorites";
-            if (favorites.includes(tool)) star.classList.add("pinned");
+            star.setAttribute("aria-label", isFav ? "Unpin from favorites" : "Pin to favorites");
+            star.setAttribute("aria-pressed", isFav ? "true" : "false");
+            if (isFav) star.classList.add("pinned");
             
             item.appendChild(star);
             
@@ -560,11 +572,15 @@ document.addEventListener("DOMContentLoaded", () => {
             favorites.splice(index, 1);
             starBtn.innerHTML = "☆";
             starBtn.classList.remove("pinned");
+            starBtn.setAttribute("aria-label", "Pin to favorites");
+            starBtn.setAttribute("aria-pressed", "false");
             appendLog("System", `Unpinned from Favorites: ${tool}`, "system-line");
         } else {
             favorites.push(tool);
             starBtn.innerHTML = "★";
             starBtn.classList.add("pinned");
+            starBtn.setAttribute("aria-label", "Unpin from favorites");
+            starBtn.setAttribute("aria-pressed", "true");
             appendLog("System", `Pinned to Favorites: ${tool}`, "system-line");
         }
         localStorage.setItem("antigravity-favorites", JSON.stringify(favorites));
@@ -574,9 +590,13 @@ document.addEventListener("DOMContentLoaded", () => {
             if (favorites.includes(tool)) {
                 btn.innerHTML = "★";
                 btn.classList.add("pinned");
+                btn.setAttribute("aria-label", "Unpin from favorites");
+                btn.setAttribute("aria-pressed", "true");
             } else {
                 btn.innerHTML = "☆";
                 btn.classList.remove("pinned");
+                btn.setAttribute("aria-label", "Pin to favorites");
+                btn.setAttribute("aria-pressed", "false");
             }
         });
         
