@@ -1,5 +1,6 @@
 import os
 import asyncio
+from tools.utils import yield_log, yield_error, yield_success, yield_progress
 
 def get_folder_size_sync(folder_path):
     total_size = 0
@@ -27,15 +28,15 @@ async def run(params: dict):
     directory = params.get("directory", "").strip()
 
     if not directory:
-        yield {"type": "error", "message": "Directory path is required."}
+        yield yield_error("Directory path is required.")
         return
 
     directory = os.path.expanduser(directory)
     if not os.path.isdir(directory):
-        yield {"type": "error", "message": f"Directory '{directory}' does not exist."}
+        yield yield_error(f"Directory '{directory}' does not exist.")
         return
 
-    yield {"type": "log", "message": f"Scanning directory sizes in: {directory}..."}
+    yield yield_log(f"Scanning directory sizes in: {directory}...")
 
     subfolders = []
     try:
@@ -46,39 +47,39 @@ async def run(params: dict):
             if os.path.isdir(path):
                 subfolders.append(path)
     except Exception as e:
-        yield {"type": "error", "message": f"Failed listing directories: {str(e)}"}
+        yield yield_error(f"Failed listing directories: {str(e)}")
         return
 
     total_folders = len(subfolders)
     if total_folders == 0:
-        yield {"type": "log", "message": "No subdirectories found."}
+        yield yield_log("No subdirectories found.")
         # Measure size of files inside main folder
         main_files_size = sum(os.path.getsize(os.path.join(directory, f)) for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f)))
-        yield {"type": "log", "message": f"Folder size (direct files only): {format_size(main_files_size)}"}
-        yield {"type": "success", "message": "Analysis complete."}
+        yield yield_log(f"Folder size (direct files only): {format_size(main_files_size)}")
+        yield yield_success("Analysis complete.")
         return
 
-    yield {"type": "log", "message": f"Found {total_folders} subfolder(s). Calculating sizes recursively..."}
+    yield yield_log(f"Found {total_folders} subfolder(s). Calculating sizes recursively...")
 
     folder_sizes = []
     for idx, path in enumerate(subfolders, 1):
         name = os.path.basename(path)
-        yield {"type": "log", "message": f"[{idx}/{total_folders}] Calculating: {name}..."}
+        yield yield_log(f"[{idx}/{total_folders}] Calculating: {name}...")
         
         # Calculate size in threadpool
         size = await asyncio.to_thread(get_folder_size_sync, path)
         folder_sizes.append((name, size))
         
         progress = (idx / total_folders) * 100
-        yield {"type": "progress", "percent": progress}
+        yield yield_progress(progress)
 
     # Sort folders by size descending
     folder_sizes.sort(key=lambda x: x[1], reverse=True)
 
-    yield {"type": "log", "message": "\nSize Summary (Largest First):"}
+    yield yield_log("\nSize Summary (Largest First):")
     for name, size in folder_sizes:
-        yield {"type": "log", "message": f"  📁 {name:<25} ➔ {format_size(size)}"}
+        yield yield_log(f"  📁 {name:<25} ➔ {format_size(size)}")
 
     total_sum = sum(size for _, size in folder_sizes)
-    yield {"type": "log", "message": f"\nTotal size of all subfolders: {format_size(total_sum)}"}
-    yield {"type": "success", "message": "Folder size analysis completed."}
+    yield yield_log(f"\nTotal size of all subfolders: {format_size(total_sum)}")
+    yield yield_success("Folder size analysis completed.")
