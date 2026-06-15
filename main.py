@@ -2,11 +2,13 @@ import os
 import json
 import uuid
 import asyncio
-from typing import Dict, Any
+import re
+import httpx
+from typing import Dict, Any, List
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator, ValidationInfo
 
 import tools
 
@@ -27,8 +29,23 @@ active_tasks: Dict[str, Dict[str, Any]] = {}
 class Settings(BaseModel):
     spotify_client_id: str = ""
     spotify_client_secret: str = ""
-    youtube_api_keys: list[str] = []
+    youtube_api_keys: List[str] = []
     last_fm_api_key: str = ""
+
+    @field_validator('spotify_client_id', 'spotify_client_secret')
+    @classmethod
+    def validate_spotify_keys(cls, v: str, info: ValidationInfo) -> str:
+        if v and not re.match(r'^[0-9a-fA-F]{32}$', v):
+            raise ValueError(f'{info.field_name} must be 32 hex characters')
+        return v
+
+    @field_validator('youtube_api_keys')
+    @classmethod
+    def validate_youtube_keys(cls, v: List[str]) -> List[str]:
+        for key in v:
+            if key and not key.startswith('AIzaSy'):
+                raise ValueError('YouTube API keys must start with AIzaSy')
+        return v
 
 def load_config() -> dict:
     if os.path.exists(CONFIG_FILE):
@@ -65,6 +82,61 @@ def get_settings():
 def update_settings(settings: Settings):
     save_config(settings.model_dump())
     return {"status": "success"}
+
+@app.get("/api/settings/verify")
+async def verify_settings():
+    config = load_config()
+    spotify_id = config.get("spotify_client_id", "")
+    spotify_secret = config.get("spotify_client_secret", "")
+    youtube_keys = config.get("youtube_api_keys", [])
+    youtube_key = youtube_keys[0] if youtube_keys else ""
+    last_fm_key = config.get("last_fm_api_key", "")
+
+    status = {
+        "spotify": False,
+        "youtube": False,
+        "lastfm": False
+    }
+
+    async with httpx.AsyncClient() as client:
+        # Spotify Check
+        if spotify_id and spotify_secret:
+            try:
+                auth_url = "https://accounts.spotify.com/api/token"
+                headers = {"Content-Type": "application/x-www-form-urlencoded"}
+                data = {"grant_type": "client_credentials"}
+                auth_str = f"{spotify_id}:{spotify_secret}"
+                import base64
+                b64_auth = base64.b64encode(auth_str.encode()).decode()
+                headers["Authorization"] = f"Basic {b64_auth}"
+                r = await client.post(auth_url, headers=headers, data=data, timeout=5)
+                if r.status_code == 200:
+                    status["spotify"] = True
+            except Exception:
+                pass
+
+        # YouTube Check
+        if youtube_key:
+            try:
+                yt_url = f"https://www.googleapis.com/youtube/v3/channels?part=id&forUsername=Google&key={youtube_key}"
+                r = await client.get(yt_url, timeout=5)
+                # YouTube might return 403 or 400 for bad keys, 200 for valid
+                if r.status_code == 200:
+                    status["youtube"] = True
+            except Exception:
+                pass
+
+        # Last.fm Check
+        if last_fm_key:
+            try:
+                lf_url = f"http://ws.audioscrobbler.com/2.0/?method=chart.gettopartists&api_key={last_fm_key}&format=json"
+                r = await client.get(lf_url, timeout=5)
+                if r.status_code == 200:
+                    status["lastfm"] = True
+            except Exception:
+                pass
+
+    return status
 
 import importlib
 

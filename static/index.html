@@ -192,6 +192,7 @@
 <div class="status-indicator online"></div>
 <span class="status-text">Server: Online</span>
 </div>
+<button class="btn-run settings-btn" id="btn-settings" style="margin-top: 10px;">⚙️ Settings</button>
 </div>
 </aside>
 <!-- Main Content Workspace -->
@@ -205,6 +206,50 @@
 </header>
 <section class="workspace-body">
 <!-- TOOL CARD PANELS -->
+
+<!-- Settings Panel -->
+<div class="tool-panel" id="panel-settings">
+    <div class="tool-description-block">
+        <p class="tool-description">Configure global external API keys and settings. These credentials power specific tools across the suite.</p>
+        <div class="tool-usage-example">
+            <strong>💡 Note:</strong>
+            <p>Ensure your keys follow the expected format (e.g., YouTube keys begin with <code>AIzaSy</code>).</p>
+        </div>
+    </div>
+    <form class="tool-form" id="form-settings">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="settings-spotify-id">Spotify Client ID</label>
+                <input type="text" id="settings-spotify-id" name="spotify_client_id" placeholder="32 hex characters">
+            </div>
+            <div class="form-group">
+                <label for="settings-spotify-secret">Spotify Client Secret</label>
+                <input type="password" id="settings-spotify-secret" name="spotify_client_secret" placeholder="32 hex characters">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="settings-youtube-keys">YouTube API Keys (comma separated)</label>
+            <textarea id="settings-youtube-keys" name="youtube_api_keys" rows="2" placeholder="AIzaSy..."></textarea>
+        </div>
+        <div class="form-group">
+            <label for="settings-lastfm-key">Last.fm API Key</label>
+            <input type="text" id="settings-lastfm-key" name="last_fm_api_key" placeholder="Last.fm Key">
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" class="btn-run">Save Settings</button>
+            <button type="button" class="btn-run" id="btn-verify-keys" style="background: linear-gradient(135deg, var(--color-cyan), #0099cc);">Verify Keys</button>
+        </div>
+    </form>
+    <div id="settings-verification-results" style="margin-top: 15px; padding: 15px; border-radius: 8px; background: rgba(0,0,0,0.2); display: none;">
+        <h4 style="margin-top: 0;">Verification Status</h4>
+        <ul style="list-style: none; padding: 0; margin: 0; line-height: 1.8;">
+            <li id="verify-spotify">Spotify: <span></span></li>
+            <li id="verify-youtube">YouTube: <span></span></li>
+            <li id="verify-lastfm">Last.fm: <span></span></li>
+        </ul>
+    </div>
+</div>
+
 <!-- 1. Spotify Downloader -->
 <div class="tool-panel active" id="panel-spotify_downloader">
 <div class="tool-description-block">

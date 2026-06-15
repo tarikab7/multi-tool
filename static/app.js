@@ -165,6 +165,69 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+    const btnSettings = document.getElementById("btn-settings");
+    if (btnSettings) {
+        btnSettings.addEventListener("click", async () => {
+            if (activeTaskId) {
+                alert("A task is currently running. Please stop or wait for it to complete.");
+                return;
+            }
+            navItems.forEach(n => n.classList.remove("active"));
+            panels.forEach(p => p.classList.remove("active"));
+
+            const targetPanel = document.getElementById("panel-settings");
+            if (targetPanel) {
+                targetPanel.classList.add("active");
+                activeToolTitle.innerText = "⚙️ Settings";
+            }
+
+            // Load current settings
+            try {
+                const res = await fetch("/api/settings");
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById("settings-spotify-id").value = data.spotify_client_id || "";
+                    document.getElementById("settings-spotify-secret").value = data.spotify_client_secret || "";
+                    document.getElementById("settings-youtube-keys").value = (data.youtube_api_keys || []).join(",");
+                    document.getElementById("settings-lastfm-key").value = data.last_fm_api_key || "";
+                }
+            } catch (e) {
+                console.error("Failed to load settings:", e);
+            }
+        });
+    }
+
+    const btnVerifyKeys = document.getElementById("btn-verify-keys");
+    if (btnVerifyKeys) {
+        btnVerifyKeys.addEventListener("click", async () => {
+            const resultsDiv = document.getElementById("settings-verification-results");
+            const spanSpotify = document.querySelector("#verify-spotify span");
+            const spanYouTube = document.querySelector("#verify-youtube span");
+            const spanLastFm = document.querySelector("#verify-lastfm span");
+
+            resultsDiv.style.display = "block";
+            spanSpotify.innerHTML = "Checking...";
+            spanYouTube.innerHTML = "Checking...";
+            spanLastFm.innerHTML = "Checking...";
+
+            try {
+                const res = await fetch("/api/settings/verify");
+                if (res.ok) {
+                    const data = await res.json();
+                    spanSpotify.innerHTML = data.spotify ? "✅ Valid" : "❌ Invalid / Not Set";
+                    spanYouTube.innerHTML = data.youtube ? "✅ Valid" : "❌ Invalid / Not Set";
+                    spanLastFm.innerHTML = data.lastfm ? "✅ Valid" : "❌ Invalid / Not Set";
+                } else {
+                    spanSpotify.innerHTML = "⚠️ Error verifying";
+                    spanYouTube.innerHTML = "⚠️ Error verifying";
+                    spanLastFm.innerHTML = "⚠️ Error verifying";
+                }
+            } catch (e) {
+                console.error("Verification error:", e);
+            }
+        });
+    }
+
     // Dynamic Form Elements visibility triggers
     function setupDynamicFormToggles() {
         // Bruteforce mode toggle
@@ -251,7 +314,13 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        if (formId === "form-spotify_downloader") {
+        if (formId === "form-settings") {
+            params.spotify_client_id = document.getElementById("settings-spotify-id").value;
+            params.spotify_client_secret = document.getElementById("settings-spotify-secret").value;
+            params.youtube_api_keys = document.getElementById("settings-youtube-keys").value.split(",").map(k => k.trim()).filter(k => k);
+            params.last_fm_api_key = document.getElementById("settings-lastfm-key").value;
+        }
+        else if (formId === "form-spotify_downloader") {
             params.playlist_urls = document.getElementById("spotify-urls").value;
             params.download_path = document.getElementById("spotify-dest").value;
         } 
