@@ -154,7 +154,8 @@
 <div class="category-items">
 <button class="nav-item" data-tags="system resource cpu ram disk monitoring usage dashboard monitor" data-tool="system_monitor">📈 Resource Monitor</button>
 <button class="nav-item" data-tags="credentials password safe lock database credentials manager vault secure" data-tool="credentials_safe">🔐 Credentials Safe</button>
-<button class="nav-item" data-tags="hosts dns redirect block website hosts file editor local domain" data-tool="hosts_editor">🌐 Hosts File Editor</button>                        <button class="nav-item" data-tool="cpu_stress" data-tags="cpu stress test hardware thermals math workload benchmark stability cores">🔥 CPU Stress Tester</button>
+<button class="nav-item" data-tags="hosts dns redirect block website hosts file editor local domain" data-tool="hosts_editor">🌐 Hosts File Editor</button>
+<button class="nav-item" data-tags="api settings keys youtube spotify lastfm verify config" data-tool="api_settings">⚙️ API Settings</button>                        <button class="nav-item" data-tool="cpu_stress" data-tags="cpu stress test hardware thermals math workload benchmark stability cores">🔥 CPU Stress Tester</button>
                         <button class="nav-item" data-tool="disk_benchmark" data-tags="disk write read benchmark speed file stream drive harddisk speedtest">💾 Disk Benchmark Speed</button>
                         <button class="nav-item" data-tool="wifi_networks" data-tags="wifi wireless scan networks ssid signal security accesspoint adapter">📶 Nearby Wi-Fi Scanner</button>
                         <button class="nav-item" data-tool="process_killer" data-tags="process kill pid terminate task list psutil dashboard close memory">💀 Process Manager & Killer</button>
@@ -835,6 +836,42 @@
 <button class="btn-run" type="submit">Stream Resources</button>
 </form>
 </div>
+<!-- 25. Credentials Safe -->
+<!-- 25.5 API Settings -->
+<div class="tool-panel" id="panel-api_settings">
+    <div class="tool-description-block">
+        <p class="tool-description">Configure your external API keys (Spotify, YouTube, Last.fm) and run a live dynamic verification against the remote endpoints to ensure credentials are valid.</p>
+        <div class="tool-usage-example">
+            <strong>💡 Example / Usage:</strong>
+            <p><strong>Keys</strong>: Paste keys and select <strong>Verify Keys</strong><br><strong>Output</strong>: Checks valid/invalid status for each.</p>
+        </div>
+    </div>
+    <form class="tool-form" id="form-api_settings">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="api_settings-spotify_client_id">Spotify Client ID (32 chars)</label>
+                <input type="text" id="api_settings-spotify_client_id" name="spotify_client_id" placeholder="Optional">
+            </div>
+            <div class="form-group">
+                <label for="api_settings-spotify_client_secret">Spotify Client Secret (32 chars)</label>
+                <input type="password" id="api_settings-spotify_client_secret" name="spotify_client_secret" placeholder="Optional">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="api_settings-youtube_api_keys">YouTube API Keys (comma separated, must start with AIzaSy)</label>
+            <input type="text" id="api_settings-youtube_api_keys" name="youtube_api_keys" placeholder="Optional">
+        </div>
+        <div class="form-group">
+            <label for="api_settings-last_fm_api_key">Last.fm API Key</label>
+            <input type="text" id="api_settings-last_fm_api_key" name="last_fm_api_key" placeholder="Optional">
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" class="btn-run" id="btn-save-api_settings" style="flex: 1;">Save Settings</button>
+            <button type="button" class="btn-run" id="btn-verify-api_settings" style="flex: 1; background: var(--bg-surface);">Verify Keys</button>
+        </div>
+    </form>
+</div>
+
 <!-- 25. Credentials Safe -->
 <div class="tool-panel" id="panel-credentials_safe">
 <div class="tool-description-block">

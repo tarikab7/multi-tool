@@ -87,11 +87,77 @@ document.addEventListener("DOMContentLoaded", () => {
             if (targetPanel) {
                 targetPanel.classList.add("active");
                 activeToolTitle.innerText = item.innerText.trim();
+
+                // If API settings is opened, load current values
+                if (tool === "api_settings") {
+                    loadApiSettings();
+                }
             }
         });
     });
 
+    // API Settings Handlers
+    async function loadApiSettings() {
+        try {
+            const res = await fetch("/api/settings");
+            if (res.ok) {
+                const data = await res.json();
+                document.getElementById("api_settings-spotify_client_id").value = data.spotify_client_id || "";
+                document.getElementById("api_settings-spotify_client_secret").value = data.spotify_client_secret || "";
+                document.getElementById("api_settings-youtube_api_keys").value = (data.youtube_api_keys || []).join(",");
+                document.getElementById("api_settings-last_fm_api_key").value = data.last_fm_api_key || "";
+            }
+        } catch (e) {
+            console.error("Failed to load settings:", e);
+        }
+    }
 
+    const formApiSettings = document.getElementById("form-api_settings");
+    if (formApiSettings) {
+        formApiSettings.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const payload = {
+                spotify_client_id: document.getElementById("api_settings-spotify_client_id").value.trim(),
+                spotify_client_secret: document.getElementById("api_settings-spotify_client_secret").value.trim(),
+                youtube_api_keys: document.getElementById("api_settings-youtube_api_keys").value.split(",").map(k => k.trim()).filter(k => k),
+                last_fm_api_key: document.getElementById("api_settings-last_fm_api_key").value.trim()
+            };
+
+            try {
+                const res = await fetch("/api/settings", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    appendLog("System", "API Settings saved successfully.", "success-line");
+                } else {
+                    const errorData = await res.json();
+                    appendLog("System", `Error saving settings: ${JSON.stringify(errorData)}`, "error-line");
+                }
+            } catch (e) {
+                appendLog("System", `Error saving settings: ${e.message}`, "error-line");
+            }
+        });
+
+        const btnVerifySettings = document.getElementById("btn-verify-api_settings");
+        if (btnVerifySettings) {
+            btnVerifySettings.addEventListener("click", async () => {
+                appendLog("System", "Verifying API Keys... please wait.", "system-line");
+                try {
+                    const res = await fetch("/api/settings/verify");
+                    if (res.ok) {
+                        const data = await res.json();
+                        appendLog("System", `Verification Results: ${JSON.stringify(data, null, 2)}`, "success-line");
+                    } else {
+                        appendLog("System", "Failed to verify API keys.", "error-line");
+                    }
+                } catch (e) {
+                    appendLog("System", `Error verifying settings: ${e.message}`, "error-line");
+                }
+            });
+        }
+    }
 
     // Clear Console
     btnClearConsole.addEventListener("click", () => {
