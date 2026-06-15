@@ -167,6 +167,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Dynamic Form Elements visibility triggers
     function setupDynamicFormToggles() {
+        // Duplicate Finder toggle
+        const dupAction = document.getElementById("dup-action");
+        const dupManifestRow = document.getElementById("dup-manifest-row");
+        if (dupAction && dupManifestRow) {
+            dupAction.addEventListener("change", (e) => {
+                if (e.target.value === "delete") {
+                    dupManifestRow.style.display = "block";
+                } else {
+                    dupManifestRow.style.display = "none";
+                    document.getElementById("dup-manifest").checked = false;
+                }
+            });
+        }
+
         // Bruteforce mode toggle
         const bruteMode = document.getElementById("brute-mode");
         const bruteEndRow = document.getElementById("brute-end-row");
@@ -318,6 +332,7 @@ document.addEventListener("DOMContentLoaded", () => {
             params.directory = document.getElementById("dup-dir").value;
             params.min_size_kb = document.getElementById("dup-min-size").value;
             params.action = document.getElementById("dup-action").value;
+            params.create_manifest = document.getElementById("dup-manifest").checked;
         }
         else if (formId === "form-directory_organizer") {
             params.directory = document.getElementById("org-dir").value;

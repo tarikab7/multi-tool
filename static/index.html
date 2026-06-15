@@ -588,7 +588,16 @@
 <select id="dup-action">
 <option value="log">Log Only (Dry Run)</option>
 <option value="delete">Delete duplicates (Keep original)</option>
+<option value="restore">Restore duplicates from backup manifest</option>
 </select>
+</div>
+</div>
+<div class="form-row" id="dup-manifest-row" style="display: none;">
+<div class="form-group">
+<div style="display: flex; align-items: center; gap: 8px;">
+<input id="dup-manifest" name="create_manifest" style="width: auto; margin: 0;" type="checkbox"/>
+<label for="dup-manifest" style="margin: 0; cursor: pointer;">Create JSON backup manifest before deleting</label>
+</div>
 </div>
 </div>
 <button class="btn-run" type="submit">Scan for Duplicates</button>
