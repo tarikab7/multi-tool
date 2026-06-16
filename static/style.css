@@ -690,6 +690,12 @@ select option {
     transform: scale(1.25);
 }
 
+.theme-dot:focus-visible {
+    outline: none;
+    border-color: #ffffff;
+    box-shadow: 0 0 0 2px var(--bg-dark), 0 0 0 4px var(--color-purple);
+}
+
 .theme-dot.active {
     border-color: #ffffff;
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
