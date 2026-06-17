@@ -186,6 +186,18 @@
                         <button class="nav-item" data-tool="lorem_ipsum" data-tags="lorem ipsum placeholder text generate sentences paragraphs dummy mockup layout">✍️ Lorem Ipsum Generator</button>
 </div>
 </div>
+
+<!-- 8. Settings -->
+<div class="nav-category" id="cat-settings">
+<div class="category-header">
+<span class="category-title">⚙️ Settings & Configuration</span>
+<span class="category-toggle">▼</span>
+</div>
+<div class="category-items">
+    <button class="nav-item" data-tool="settings" data-tags="settings config api keys spotify youtube lastfm setup">⚙️ System Settings</button>
+</div>
+</div>
+
 </nav>
 <div class="sidebar-footer">
 <div class="system-status">
@@ -205,6 +217,41 @@
 </header>
 <section class="workspace-body">
 <!-- TOOL CARD PANELS -->
+
+<!-- System Settings Panel -->
+<div class="tool-panel" id="panel-settings">
+    <div class="tool-description-block">
+        <p class="tool-description">Configure the system API keys required for external services. Ensure your keys match the specific format requirements. After saving, you can click "Verify Keys" to check if they are valid against the remote APIs.</p>
+    </div>
+    <form class="tool-form" id="form-settings">
+        <div class="form-group">
+            <label for="settings-spotify-client-id">Spotify Client ID (32 hex characters)</label>
+            <input type="text" id="settings-spotify-client-id" name="spotify_client_id" placeholder="Enter Spotify Client ID...">
+        </div>
+        <div class="form-group">
+            <label for="settings-spotify-client-secret">Spotify Client Secret (32 hex characters)</label>
+            <input type="text" id="settings-spotify-client-secret" name="spotify_client_secret" placeholder="Enter Spotify Client Secret...">
+        </div>
+        <div class="form-group">
+            <label for="settings-youtube-api-keys">YouTube API Keys (comma separated, starting with 'AIzaSy')</label>
+            <input type="text" id="settings-youtube-api-keys" name="youtube_api_keys" placeholder="AIzaSy..., AIzaSy...">
+        </div>
+        <div class="form-group">
+            <label for="settings-lastfm-api-key">Last.fm API Key</label>
+            <input type="text" id="settings-lastfm-api-key" name="last_fm_api_key" placeholder="Enter Last.fm API Key...">
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" class="btn-run" id="btn-save-settings">Save Settings</button>
+            <button type="button" class="btn-run" id="btn-verify-settings" style="background-color: var(--theme-color); opacity: 0.8;">Verify Keys</button>
+        </div>
+    </form>
+
+    <div id="settings-verification-results" style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px; display: none;">
+        <h4>Verification Results</h4>
+        <div id="verification-content" style="margin-top: 10px; font-family: monospace;"></div>
+    </div>
+</div>
 <!-- 1. Spotify Downloader -->
 <div class="tool-panel active" id="panel-spotify_downloader">
 <div class="tool-description-block">

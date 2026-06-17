@@ -6,7 +6,9 @@ from typing import Dict, Any
 from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+import httpx
+import base64
 
 import tools
 
@@ -24,11 +26,21 @@ CONFIG_FILE = os.path.join(os.path.dirname(__file__), "config.json")
 # Maps task_id -> { "task": asyncio.Task, "queue": asyncio.Queue, "status": str }
 active_tasks: Dict[str, Dict[str, Any]] = {}
 
+from pydantic import field_validator
+
 class Settings(BaseModel):
-    spotify_client_id: str = ""
-    spotify_client_secret: str = ""
-    youtube_api_keys: list[str] = []
+    spotify_client_id: str = Field(default="", pattern=r"^([a-fA-F0-9]{32})?$")
+    spotify_client_secret: str = Field(default="", pattern=r"^([a-fA-F0-9]{32})?$")
+    youtube_api_keys: list[str] = Field(default_factory=list)
     last_fm_api_key: str = ""
+
+    @field_validator("youtube_api_keys")
+    @classmethod
+    def validate_youtube_keys(cls, v: list[str]) -> list[str]:
+        for key in v:
+            if key and not key.startswith("AIzaSy"):
+                raise ValueError("Invalid YouTube API Key format.")
+        return v
 
 def load_config() -> dict:
     if os.path.exists(CONFIG_FILE):
@@ -65,6 +77,59 @@ def get_settings():
 def update_settings(settings: Settings):
     save_config(settings.model_dump())
     return {"status": "success"}
+
+@app.get("/api/settings/verify")
+async def verify_settings():
+    config = load_config()
+    results = {}
+
+    async with httpx.AsyncClient() as client:
+        # Spotify Check
+        client_id = config.get("spotify_client_id", "")
+        client_secret = config.get("spotify_client_secret", "")
+        if client_id and client_secret:
+            try:
+                auth_str = f"{client_id}:{client_secret}"
+                b64_auth_str = base64.b64encode(auth_str.encode()).decode()
+                headers = {"Authorization": f"Basic {b64_auth_str}"}
+                data = {"grant_type": "client_credentials"}
+                r = await client.post("https://accounts.spotify.com/api/token", headers=headers, data=data, timeout=5.0)
+                results["spotify"] = "valid" if r.status_code == 200 else "invalid"
+            except Exception:
+                results["spotify"] = "error"
+        else:
+            results["spotify"] = "missing"
+
+        # YouTube Check
+        yt_keys = config.get("youtube_api_keys", [])
+        if yt_keys:
+            yt_status = []
+            for k in yt_keys:
+                if not k.startswith("AIzaSy"):
+                    yt_status.append("invalid")
+                    continue
+                try:
+                    r = await client.get(f"https://www.googleapis.com/youtube/v3/search?part=snippet&q=test&key={k}", timeout=5.0)
+                    # 400 is also typically valid key but bad request, 403 can be quota, but 200 is definitive
+                    yt_status.append("valid" if r.status_code in (200, 400, 403) else "invalid")
+                except Exception:
+                    yt_status.append("error")
+            results["youtube"] = yt_status
+        else:
+            results["youtube"] = ["missing"]
+
+        # Last.fm Check
+        lfm_key = config.get("last_fm_api_key", "")
+        if lfm_key:
+            try:
+                r = await client.get(f"http://ws.audioscrobbler.com/2.0/?method=track.search&track=test&api_key={lfm_key}&format=json", timeout=5.0)
+                results["lastfm"] = "valid" if r.status_code == 200 and "error" not in r.json() else "invalid"
+            except Exception:
+                results["lastfm"] = "error"
+        else:
+            results["lastfm"] = "missing"
+
+    return results
 
 import importlib
 

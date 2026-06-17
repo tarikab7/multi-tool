@@ -27,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupDynamicFormToggles();
 
     // Initialize
+    loadSettings();
 
     // Collapsible Category Folders Logic
     categoryHeaders.forEach(header => {
@@ -127,7 +128,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const formId = form.id;
             
-
+            if (formId === "form-settings") {
+                saveSettings();
+                return;
+            }
 
             const toolName = formId.replace("form-", "");
             const params = getFormParameters(formId);
@@ -619,6 +623,106 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             
             favoritesItemsContainer.appendChild(clone);
+        });
+    }
+
+    // === SETTINGS LOGIC ===
+    const settingsForm = document.getElementById("form-settings");
+    const btnVerifySettings = document.getElementById("btn-verify-settings");
+    const settingsResultsBlock = document.getElementById("settings-verification-results");
+    const settingsResultsContent = document.getElementById("verification-content");
+
+    async function loadSettings() {
+        try {
+            const res = await fetch("/api/settings");
+            if (res.ok) {
+                const data = await res.json();
+                document.getElementById("settings-spotify-client-id").value = data.spotify_client_id || "";
+                document.getElementById("settings-spotify-client-secret").value = data.spotify_client_secret || "";
+                document.getElementById("settings-youtube-api-keys").value = (data.youtube_api_keys || []).join(", ");
+                document.getElementById("settings-lastfm-api-key").value = data.last_fm_api_key || "";
+            }
+        } catch (e) {
+            console.error("Failed to load settings:", e);
+        }
+    }
+
+    async function saveSettings() {
+        const payload = {
+            spotify_client_id: document.getElementById("settings-spotify-client-id").value.trim(),
+            spotify_client_secret: document.getElementById("settings-spotify-client-secret").value.trim(),
+            youtube_api_keys: document.getElementById("settings-youtube-api-keys").value.split(",").map(s => s.trim()).filter(s => s),
+            last_fm_api_key: document.getElementById("settings-lastfm-api-key").value.trim()
+        };
+
+        try {
+            const res = await fetch("/api/settings", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(payload)
+            });
+            if (res.ok) {
+                appendLog("System", "Settings saved successfully.", "success-line");
+                alert("Settings saved successfully.");
+            } else {
+                const err = await res.json();
+                appendLog("System", `Failed to save settings: ${err.detail || 'Validation error'}`, "error-line");
+                alert(`Error: ${err.detail || 'Validation error'}`);
+            }
+        } catch (e) {
+            appendLog("System", `Error saving settings: ${e.message}`, "error-line");
+            alert("Error saving settings");
+        }
+    }
+
+    if (btnVerifySettings) {
+        btnVerifySettings.addEventListener("click", async () => {
+            btnVerifySettings.innerText = "Verifying...";
+            btnVerifySettings.disabled = true;
+            settingsResultsBlock.style.display = "block";
+            settingsResultsContent.innerHTML = "<i>Running API checks against Spotify, YouTube, and Last.fm...</i>";
+
+            try {
+                const res = await fetch("/api/settings/verify");
+                if (res.ok) {
+                    const data = await res.json();
+                    let html = "";
+
+                    // Spotify
+                    const spStat = data.spotify;
+                    const spColor = spStat === "valid" ? "var(--color-green)" : (spStat === "missing" ? "var(--text-muted)" : "var(--color-red)");
+                    html += `<div style="color: ${spColor}">Spotify: ${spStat.toUpperCase()}</div>`;
+
+                    // YouTube
+                    const ytArr = data.youtube || [];
+                    if (ytArr.length === 0) {
+                        html += `<div style="color: var(--text-muted)">YouTube: MISSING</div>`;
+                    } else if (ytArr.length === 1 && ytArr[0] === "missing") {
+                        html += `<div style="color: var(--text-muted)">YouTube: MISSING</div>`;
+                    } else {
+                        html += `<div>YouTube Keys:</div>`;
+                        ytArr.forEach((stat, idx) => {
+                            const c = stat === "valid" ? "var(--color-green)" : (stat === "missing" ? "var(--text-muted)" : "var(--color-red)");
+                            html += `<div style="color: ${c}; padding-left: 15px;">Key ${idx+1}: ${stat.toUpperCase()}</div>`;
+                        });
+                    }
+
+                    // Last.fm
+                    const lfmStat = data.lastfm;
+                    const lfmColor = lfmStat === "valid" ? "var(--color-green)" : (lfmStat === "missing" ? "var(--text-muted)" : "var(--color-red)");
+                    html += `<div style="color: ${lfmColor}">Last.fm: ${lfmStat.toUpperCase()}</div>`;
+
+                    settingsResultsContent.innerHTML = html;
+                    appendLog("System", "Settings verification completed.", "system-line");
+                } else {
+                    settingsResultsContent.innerHTML = "<span style='color: var(--color-red)'>Server error during verification.</span>";
+                }
+            } catch (e) {
+                settingsResultsContent.innerHTML = `<span style='color: var(--color-red)'>Network error: ${e.message}</span>`;
+            } finally {
+                btnVerifySettings.innerText = "Verify Keys";
+                btnVerifySettings.disabled = false;
+            }
         });
     }
 
