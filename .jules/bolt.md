@@ -1,0 +1,3 @@
+## 2024-06-19 - [File System Traversal Optimization]
+**Learning:** `os.walk` combined with `os.path.getsize` incurs substantial overhead due to redundant `stat()` system calls. In this codebase, the `Folder Size Analyzer` tool was significantly slowed down when iterating over large directories.
+**Action:** Replace `os.walk` with `os.scandir` for directory traversal when file size or other stat information is needed. `os.scandir` caches `stat()` information, avoiding redundant system calls and vastly improving performance (often >2x faster). Ensure to handle `entry.is_symlink()`, `entry.is_file()`, `entry.is_dir()`, and `entry.stat(follow_symlinks=False).st_size` properly.
