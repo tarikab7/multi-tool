@@ -1,0 +1,3 @@
+## 2024-05-18 - [Icon-Only Theme Selector Accessibility]
+**Learning:** Custom interactive elements like color theme selectors (which visually just look like colored dots) are completely invisible to screen readers and inaccessible via keyboard navigation if built simply using basic tags like `<span>`.
+**Action:** When implementing custom interactive elements, always ensure to explicitly assign `role="button"`, `tabindex="0"`, explicit `aria-label`s mapping to what the visual indicator implies, keyboard event listeners mapping `Enter` and `Space` to click actions, and dynamic `aria-pressed` states for active options, and a clear `.theme-dot:focus-visible` state in CSS.
