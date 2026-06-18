@@ -3,15 +3,23 @@ import asyncio
 
 def get_folder_size_sync(folder_path):
     total_size = 0
-    try:
-        for root, _, files in os.walk(folder_path):
-            for file in files:
-                filepath = os.path.join(root, file)
-                # Skip symlinks to avoid infinite loops
-                if not os.path.islink(filepath):
-                    total_size += os.path.getsize(filepath)
-    except Exception:
-        pass
+    stack = [folder_path]
+    while stack:
+        current_dir = stack.pop()
+        try:
+            with os.scandir(current_dir) as it:
+                for entry in it:
+                    try:
+                        if entry.is_symlink():
+                            continue
+                        if entry.is_dir():
+                            stack.append(entry.path)
+                        elif entry.is_file():
+                            total_size += entry.stat().st_size
+                    except Exception:
+                        continue
+        except Exception:
+            pass
     return total_size
 
 def format_size(size_bytes):

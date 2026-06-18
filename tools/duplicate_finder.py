@@ -18,18 +18,25 @@ def scan_duplicates(directory, min_size_bytes):
     size_map = {}
     
     # 1. Group files by size first (extremely fast compared to hashing everything!)
-    for root, _, files in os.walk(directory):
-        for filename in files:
-            filepath = os.path.join(root, filename)
-            try:
-                # Skip symlinks
-                if os.path.islink(filepath):
-                    continue
-                size = os.path.getsize(filepath)
-                if size >= min_size_bytes:
-                    size_map.setdefault(size, []).append(filepath)
-            except Exception:
-                continue
+    stack = [directory]
+    while stack:
+        current_dir = stack.pop()
+        try:
+            with os.scandir(current_dir) as it:
+                for entry in it:
+                    try:
+                        if entry.is_symlink():
+                            continue
+                        if entry.is_dir():
+                            stack.append(entry.path)
+                        elif entry.is_file():
+                            size = entry.stat().st_size
+                            if size >= min_size_bytes:
+                                size_map.setdefault(size, []).append(entry.path)
+                    except Exception:
+                        continue
+        except Exception:
+            continue
 
     # Filter out sizes that have only 1 file
     potential_duplicates = {size: paths for size, paths in size_map.items() if len(paths) > 1}
