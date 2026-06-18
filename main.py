@@ -75,9 +75,10 @@ async def run_tool_task(task_id: str, tool_func, params: dict):
     try:
         # tool_func is an async generator
         async for event in tool_func(params):
-            await queue.put(event)
+            event_dict = event.to_dict() if hasattr(event, "to_dict") else event
+            await queue.put(event_dict)
             # End loop if we hit success or error events
-            if event.get("type") in ("success", "error"):
+            if event_dict.get("type") in ("success", "error"):
                 break
     except asyncio.CancelledError:
         await queue.put({"type": "log", "message": "Operation cancelled."})
