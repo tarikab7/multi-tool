@@ -1,6 +1,7 @@
 import os
 import subprocess
 import asyncio
+from tools.ffmpeg_helper import get_media_duration, run_ffmpeg_with_progress
 
 async def run(params: dict):
     audio_path = params.get("audio_path", "").strip()
@@ -24,14 +25,41 @@ async def run(params: dict):
         cmd.extend(["-to", end_time])
     cmd.extend(["-c", "copy", output_path])
     
-    try:
-        proc = await asyncio.create_subprocess_exec(
-            *cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE
-        )
-        stdout, stderr = await proc.communicate()
-        if proc.returncode == 0:
-            yield {"type": "success", "message": f"Successfully trimmed audio: {output_path}"}
-        else:
-            yield {"type": "error", "message": f"FFmpeg failed: {stderr.decode()}"}
-    except Exception as e:
-        yield {"type": "error", "message": f"Error running FFmpeg: {str(e)}"}
+    duration = 0.0
+    if end_time:
+        try:
+            # Parse start_time and end_time to compute duration
+            def parse_time(t_str):
+                parts = t_str.split(':')
+                if len(parts) == 3:
+                    return int(parts[0]) * 3600 + int(parts[1]) * 60 + float(parts[2])
+                elif len(parts) == 2:
+                    return int(parts[0]) * 60 + float(parts[1])
+                return float(parts[0])
+            st = parse_time(start_time)
+            et = parse_time(end_time)
+            duration = et - st
+        except Exception:
+            duration = await get_media_duration(audio_path)
+    else:
+        duration = await get_media_duration(audio_path)
+        try:
+            def parse_time(t_str):
+                parts = t_str.split(':')
+                if len(parts) == 3:
+                    return int(parts[0]) * 3600 + int(parts[1]) * 60 + float(parts[2])
+                elif len(parts) == 2:
+                    return int(parts[0]) * 60 + float(parts[1])
+                return float(parts[0])
+            st = parse_time(start_time)
+            if duration > st:
+                duration -= st
+        except Exception:
+            pass
+
+    async for event in run_ffmpeg_with_progress(
+        cmd,
+        duration,
+        f"Successfully trimmed audio: {output_path}"
+    ):
+        yield event
