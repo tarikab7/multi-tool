@@ -318,6 +318,7 @@ document.addEventListener("DOMContentLoaded", () => {
             params.directory = document.getElementById("dup-dir").value;
             params.min_size_kb = document.getElementById("dup-min-size").value;
             params.action = document.getElementById("dup-action").value;
+            params.create_backup = document.getElementById("dup-backup").checked;
         }
         else if (formId === "form-directory_organizer") {
             params.directory = document.getElementById("org-dir").value;
@@ -515,6 +516,18 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         
         localStorage.setItem("antigravity-theme", theme);
+    }
+
+    const dupAction = document.getElementById("dup-action");
+    if (dupAction) {
+        dupAction.addEventListener("change", (e) => {
+            const backupWrapper = document.getElementById("dup-backup-wrapper");
+            if (e.target.value === "delete") {
+                backupWrapper.style.display = "flex";
+            } else {
+                backupWrapper.style.display = "none";
+            }
+        });
     }
 
     // === 2. FAVORITES PINNING SYSTEM ===
