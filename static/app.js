@@ -318,6 +318,10 @@ document.addEventListener("DOMContentLoaded", () => {
             params.directory = document.getElementById("dup-dir").value;
             params.min_size_kb = document.getElementById("dup-min-size").value;
             params.action = document.getElementById("dup-action").value;
+            const manifestCheckbox = document.getElementById("dup-create-manifest");
+            if (manifestCheckbox) {
+                params.create_manifest = manifestCheckbox.checked;
+            }
         }
         else if (formId === "form-directory_organizer") {
             params.directory = document.getElementById("org-dir").value;
@@ -784,6 +788,27 @@ document.addEventListener("DOMContentLoaded", () => {
                 activeBrowserTargetInput.value = selectedItemPath;
                 activeBrowserTargetInput.dispatchEvent(new Event("change"));
                 modalBrowser.classList.remove("show");
+            }
+        });
+    }
+
+    // Handle dup-action change to show/hide dup-create-manifest group
+    const dupActionSelect = document.getElementById("dup-action");
+    if (dupActionSelect) {
+        // Initial state
+        const manifestGroup = document.getElementById("dup-manifest-group");
+        if (manifestGroup) {
+            manifestGroup.style.display = dupActionSelect.value === "delete" ? "block" : "none";
+        }
+
+        dupActionSelect.addEventListener("change", (e) => {
+            const manifestGroup = document.getElementById("dup-manifest-group");
+            if (manifestGroup) {
+                if (e.target.value === "delete") {
+                    manifestGroup.style.display = "block";
+                } else {
+                    manifestGroup.style.display = "none";
+                }
             }
         });
     }

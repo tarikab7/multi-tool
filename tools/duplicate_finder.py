@@ -1,6 +1,8 @@
 import os
 import hashlib
 import asyncio
+import json
+import shutil
 
 def get_file_sha256(filepath):
     hasher = hashlib.sha256()
@@ -39,6 +41,7 @@ async def run(params: dict):
     directory = params.get("directory", "").strip()
     min_size_kb = params.get("min_size_kb", "0").strip()
     action = params.get("action", "log") # "log" or "delete"
+    create_manifest = params.get("create_manifest", False)
 
     if not directory:
         yield {"type": "error", "message": "Directory path is required."}
@@ -47,6 +50,43 @@ async def run(params: dict):
     directory = os.path.expanduser(directory)
     if not os.path.isdir(directory):
         yield {"type": "error", "message": f"Directory '{directory}' does not exist."}
+        return
+
+    if action == "restore":
+        manifest_path = os.path.join(directory, "duplicates_manifest.json")
+        if not os.path.exists(manifest_path):
+            yield {"type": "error", "message": f"Manifest file not found: {manifest_path}"}
+            return
+
+        yield {"type": "log", "message": f"Reading manifest from {manifest_path}..."}
+        try:
+            with open(manifest_path, "r") as f:
+                manifest = json.load(f)
+        except Exception as e:
+            yield {"type": "error", "message": f"Failed to read manifest: {str(e)}"}
+            return
+
+        restored_count = 0
+        for item in manifest:
+            original = item.get("original")
+            deleted = item.get("deleted")
+            if not original or not deleted:
+                continue
+
+            if not os.path.exists(original):
+                yield {"type": "log", "message": f"  [ERROR] Original file missing, cannot restore: {deleted}"}
+                continue
+
+            try:
+                # Ensure directory exists for restored file
+                os.makedirs(os.path.dirname(deleted), exist_ok=True)
+                shutil.copy2(original, deleted)
+                restored_count += 1
+                yield {"type": "log", "message": f"  [RESTORED] {deleted} (from {original})"}
+            except Exception as e:
+                yield {"type": "log", "message": f"  [ERROR] Failed to restore {deleted}: {str(e)}"}
+
+        yield {"type": "success", "message": f"Restore completed. Recovered {restored_count} files."}
         return
 
     try:
@@ -71,17 +111,24 @@ async def run(params: dict):
     processed_count = 0
     total_files_to_hash = sum(len(paths) for paths in potential_duplicates.values())
 
+    async def process_file(path):
+        f_hash = await asyncio.to_thread(get_file_sha256, path)
+        return path, f_hash
+
+    tasks = []
     for size, paths in potential_duplicates.items():
         for path in paths:
-            # Hash file in thread
-            file_hash = await asyncio.to_thread(get_file_sha256, path)
-            if file_hash:
-                hash_map.setdefault(file_hash, []).append(path)
-            
-            processed_count += 1
-            if processed_count % 10 == 0 or processed_count == total_files_to_hash:
-                progress = (processed_count / total_files_to_hash) * 100
-                yield {"type": "progress", "percent": progress}
+            tasks.append(process_file(path))
+
+    for coro in asyncio.as_completed(tasks):
+        path, file_hash = await coro
+        if file_hash:
+            hash_map.setdefault(file_hash, []).append(path)
+
+        processed_count += 1
+        if processed_count % 10 == 0 or processed_count == total_files_to_hash:
+            progress = (processed_count / total_files_to_hash) * 100
+            yield {"type": "progress", "percent": progress}
 
     # Find actual duplicates (hashes with > 1 file)
     duplicates = {h: paths for h, paths in hash_map.items() if len(paths) > 1}
@@ -95,6 +142,7 @@ async def run(params: dict):
     
     saved_bytes = 0
     deleted_count = 0
+    manifest = []
 
     for idx, (f_hash, paths) in enumerate(duplicates.items(), 1):
         # Sort paths by modification time (keep the oldest)
@@ -111,6 +159,11 @@ async def run(params: dict):
         for rep in redundant:
             saved_bytes += file_size
             if action == "delete":
+                if create_manifest:
+                    manifest.append({
+                        "original": original,
+                        "deleted": rep
+                    })
                 try:
                     os.remove(rep)
                     deleted_count += 1
@@ -119,6 +172,15 @@ async def run(params: dict):
                     yield {"type": "log", "message": f"  [ERROR] Failed to delete {rep}: {str(e)}"}
             else:
                 yield {"type": "log", "message": f"  [DUPLICATE] {rep}"}
+
+    if action == "delete" and create_manifest and manifest:
+        manifest_path = os.path.join(directory, "duplicates_manifest.json")
+        try:
+            with open(manifest_path, "w") as f:
+                json.dump(manifest, f, indent=4)
+            yield {"type": "log", "message": f"Backup manifest saved to {manifest_path}"}
+        except Exception as e:
+            yield {"type": "log", "message": f"Failed to save manifest: {str(e)}"}
 
     saved_mb = saved_bytes / (1024 * 1024)
     if action == "delete":
