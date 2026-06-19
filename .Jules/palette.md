@@ -1,0 +1,3 @@
+## 2024-06-19 - Making non-standard elements accessible
+**Learning:** When using generic elements like `<span>` as interactive controls (like the theme selector dots), they lack native button semantics and keyboard accessibility. Screen readers ignore them, and keyboard users cannot focus or activate them.
+**Action:** Always add `role="button"`, `tabindex="0"`, `aria-label`, and keyboard event listeners (`Enter` and `Space`) to non-semantic interactive elements. Additionally, for toggle-like controls, dynamically manage `aria-pressed`, and ensure a visible `:focus-visible` state is present in the CSS. Group related controls with `role="group"` and `aria-label`.

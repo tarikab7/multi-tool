@@ -683,11 +683,16 @@ select option {
     border-radius: 50%;
     cursor: pointer;
     border: 2px solid transparent;
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .theme-dot:hover {
     transform: scale(1.25);
+}
+
+.theme-dot:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-purple);
 }
 
 .theme-dot.active {
