@@ -1,13 +1,14 @@
 import os
 import subprocess
 import asyncio
+from tools.utils import yield_log, yield_progress, yield_success, yield_error
 
 async def run(params: dict):
     input_path = params.get("input_path", "").strip()
     output_folder = params.get("output_folder", "").strip()
 
     if not input_path:
-        yield {"type": "error", "message": "Input path is required."}
+        yield yield_error("Input path is required.")
         return
 
     # Normalize paths
@@ -33,16 +34,16 @@ async def run(params: dict):
                 if file.lower().endswith(extensions) and not "-stereo" in file:
                     files_to_process.append(os.path.join(root, file))
     else:
-        yield {"type": "error", "message": f"Input path '{input_path}' does not exist."}
+        yield yield_error(f"Input path '{input_path}' does not exist.")
         return
 
     total_files = len(files_to_process)
     if total_files == 0:
-        yield {"type": "log", "message": "No matching media files found to process."}
-        yield {"type": "success", "message": "Finished. 0 files processed."}
+        yield yield_log("No matching media files found to process.")
+        yield yield_success("Finished. 0 files processed.")
         return
 
-    yield {"type": "log", "message": f"Found {total_files} file(s) to process."}
+    yield yield_log(f"Found {total_files} file(s) to process.")
     os.makedirs(output_folder, exist_ok=True)
 
     processed_count = 0
@@ -52,7 +53,7 @@ async def run(params: dict):
         out_filename = f"{name}-stereo{ext}"
         out_filepath = os.path.join(output_folder, out_filename)
 
-        yield {"type": "log", "message": f"[{idx}/{total_files}] Converting '{filename}' to stereo..."}
+        yield yield_log(f"[{idx}/{total_files}] Converting '{filename}' to stereo...")
 
         # Upgraded FFmpeg command: Copies video track (if any) and mixes 5.1 audio down to stereo
         cmd = [
@@ -78,14 +79,14 @@ async def run(params: dict):
             
             if process.returncode == 0:
                 processed_count += 1
-                yield {"type": "log", "message": f"Successfully saved to: {out_filepath}"}
+                yield yield_log(f"Successfully saved to: {out_filepath}")
             else:
                 err_msg = stderr.decode('utf-8', errors='ignore')
-                yield {"type": "log", "message": f"Failed converting '{filename}': {err_msg[:300]}..."}
+                yield yield_log(f"Failed converting '{filename}': {err_msg[:300]}...")
         except Exception as e:
-            yield {"type": "log", "message": f"Error executing ffmpeg for '{filename}': {str(e)}"}
+            yield yield_log(f"Error executing ffmpeg for '{filename}': {str(e)}")
 
         progress_percent = (idx / total_files) * 100
-        yield {"type": "progress", "percent": progress_percent}
+        yield yield_progress(progress_percent)
 
-    yield {"type": "success", "message": f"Completed. Successfully converted {processed_count} of {total_files} files."}
+    yield yield_success(f"Completed. Successfully converted {processed_count} of {total_files} files.")

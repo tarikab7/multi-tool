@@ -1,15 +1,16 @@
 import os
 import asyncio
+from tools.utils import yield_log, yield_error, yield_success
 
 async def run(params: dict):
     dir_path = params.get("dir_path", "").strip()
     delete_links = params.get("delete_links", "false") == "true"
     
     if not dir_path or not os.path.isdir(dir_path):
-        yield {"type": "error", "message": "Valid scanning directory is required."}
+        yield yield_error("Valid scanning directory is required.")
         return
         
-    yield {"type": "log", "message": f"Scanning {dir_path} recursively for symlinks..."}
+    yield yield_log(f"Scanning {dir_path} recursively for symlinks...")
     
     broken_links = []
     try:
@@ -26,15 +27,15 @@ async def run(params: dict):
             await asyncio.sleep(0.001)
             
         if broken_links:
-            yield {"type": "log", "message": f"Found {len(broken_links)} broken symlinks."}
+            yield yield_log(f"Found {len(broken_links)} broken symlinks.")
             if delete_links:
                 for link in broken_links:
                     os.remove(link)
-                    yield {"type": "log", "message": f"Deleted broken link: {link}"}
-                yield {"type": "success", "message": f"Successfully deleted {len(broken_links)} broken symlinks."}
+                    yield yield_log(f"Deleted broken link: {link}")
+                yield yield_success(f"Successfully deleted {len(broken_links)} broken symlinks.")
             else:
-                yield {"type": "success", "message": "Scan finished. Pointers displayed above."}
+                yield yield_success("Scan finished. Pointers displayed above.")
         else:
-            yield {"type": "success", "message": "Scan completed. 0 broken links discovered."}
+            yield yield_success("Scan completed. 0 broken links discovered.")
     except Exception as e:
-        yield {"type": "error", "message": f"Scan failed: {str(e)}"}
+        yield yield_error(f"Scan failed: {str(e)}")

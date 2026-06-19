@@ -1,6 +1,7 @@
 import os
 import subprocess
 import asyncio
+from tools.utils import yield_log, yield_error, yield_success
 
 async def run(params: dict):
     audio_path = params.get("audio_path", "").strip()
@@ -9,14 +10,14 @@ async def run(params: dict):
     output_path = params.get("output_path", "").strip()
     
     if not audio_path or not os.path.exists(audio_path):
-        yield {"type": "error", "message": "Valid audio path is required."}
+        yield yield_error("Valid audio path is required.")
         return
         
     if not output_path:
         base, ext = os.path.splitext(audio_path)
         output_path = f"{base}_trimmed{ext}"
         
-    yield {"type": "log", "message": f"Trimming {audio_path} starting from {start_time}..."}
+    yield yield_log(f"Trimming {audio_path} starting from {start_time}...")
     
     # Construct FFmpeg command
     cmd = ["ffmpeg", "-y", "-i", audio_path, "-ss", start_time]
@@ -30,8 +31,8 @@ async def run(params: dict):
         )
         stdout, stderr = await proc.communicate()
         if proc.returncode == 0:
-            yield {"type": "success", "message": f"Successfully trimmed audio: {output_path}"}
+            yield yield_success(f"Successfully trimmed audio: {output_path}")
         else:
-            yield {"type": "error", "message": f"FFmpeg failed: {stderr.decode()}"}
+            yield yield_error(f"FFmpeg failed: {stderr.decode()}")
     except Exception as e:
-        yield {"type": "error", "message": f"Error running FFmpeg: {str(e)}"}
+        yield yield_error(f"Error running FFmpeg: {str(e)}")
