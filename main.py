@@ -186,16 +186,20 @@ def browse_path(path: str = ""):
                 "is_dir": True
             })
             
-        for name in sorted(os.listdir(path)):
-            if name.startswith('.'):
-                continue
-            full_path = os.path.join(path, name)
-            is_dir = os.path.isdir(full_path)
-            items.append({
-                "name": name,
-                "path": full_path,
-                "is_dir": is_dir
-            })
+        dir_items = []
+        # Optimization: Use os.scandir instead of os.listdir + os.path.isdir
+        # This avoids redundant stat() system calls and improves performance
+        with os.scandir(path) as it:
+            for entry in it:
+                if entry.name.startswith('.'):
+                    continue
+                dir_items.append({
+                    "name": entry.name,
+                    "path": entry.path,
+                    "is_dir": entry.is_dir()
+                })
+        dir_items.sort(key=lambda x: x["name"])
+        items.extend(dir_items)
         return {
             "current_path": path,
             "items": items

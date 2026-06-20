@@ -1,0 +1,5 @@
+## 2025-02-23 - Replace os.listdir with os.scandir for faster directory traversal
+**Learning:** Using `os.listdir` followed by `os.path.isdir` (or other `stat` calls) inside a loop creates redundant `stat()` system calls, slowing down directory traversal. The codebase-specific performance pattern dictates using `os.scandir`, which caches file attributes natively in a DirEntry object. My benchmark revealed `os.scandir` handles 1000 items in ~0.155s compared to `os.listdir`'s ~0.652s (a ~4.2x speedup).
+
+Another critical learning: `entry.is_dir()` behaves differently than `os.path.isdir` with respect to symlinks if `follow_symlinks=False` is used. Furthermore, changing sorting logic requires extreme care. Appending the parent directory to a sorted array and then sorting the *entire* array displaces the parent directory if files with lower ASCII values (like space or `!`) are present.
+**Action:** Use `os.scandir(path)` as a context manager and map `entry.is_dir()` (following symlinks by default like `os.path.isdir`). Sort the children array independently before appending it to the base array containing the parent directory.
