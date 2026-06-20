@@ -75,6 +75,10 @@ async def run_tool_task(task_id: str, tool_func, params: dict):
     try:
         # tool_func is an async generator
         async for event in tool_func(params):
+            # Check if event is a ToolEvent object with a to_dict method
+            if hasattr(event, "to_dict"):
+                event = event.to_dict()
+
             await queue.put(event)
             # End loop if we hit success or error events
             if event.get("type") in ("success", "error"):
