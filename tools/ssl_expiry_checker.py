@@ -2,16 +2,17 @@ import socket
 import ssl
 import datetime
 import asyncio
+from tools.utils import yield_log, yield_success, yield_error, ToolEvent
 
 async def run(params: dict):
     host = params.get("host", "").strip().replace("http://", "").replace("https://", "").split("/")[0].split(":")[0]
     port = int(params.get("port", "443"))
     
     if not host:
-        yield {"type": "error", "message": "Valid host name is required."}
+        yield yield_error("Valid host name is required.")
         return
         
-    yield {"type": "log", "message": f"Retrieving SSL certificate details from {host}:{port}..."}
+    yield yield_log(f"Retrieving SSL certificate details from {host}:{port}...")
     
     try:
         context = ssl.create_default_context()
@@ -26,19 +27,19 @@ async def run(params: dict):
             expiry_date = datetime.datetime.strptime(expiry_str, "%b %d %H:%M:%S %Y %Z")
             days_left = (expiry_date - datetime.datetime.utcnow()).days
             
-            yield {"type": "found", "message": f"Issuer: {dict(x[0] for x in cert.get('issuer', []))}"}
-            yield {"type": "found", "message": f"Expires On: {expiry_str}"}
-            yield {"type": "found", "message": f"Days Remaining: {days_left} days"}
+            yield ToolEvent("found", message=f"Issuer: {dict(x[0] for x in cert.get('issuer', []))}")
+            yield ToolEvent("found", message=f"Expires On: {expiry_str}")
+            yield ToolEvent("found", message=f"Days Remaining: {days_left} days")
             
             if days_left <= 0:
-                yield {"type": "log", "message": "WARNING: Certificate has EXPIRED!"}
+                yield yield_log("WARNING: Certificate has EXPIRED!")
             elif days_left < 30:
-                yield {"type": "log", "message": "WARNING: Certificate expires in less than 30 days!"}
+                yield yield_log("WARNING: Certificate expires in less than 30 days!")
                 
-            yield {"type": "success", "message": f"SSL status: OK ({days_left} days remaining)"}
+            yield yield_success(f"SSL status: OK ({days_left} days remaining)")
         else:
-            yield {"type": "error", "message": "Unable to read certificate validity headers."}
+            yield yield_error("Unable to read certificate validity headers.")
             
         sock.close()
     except Exception as e:
-        yield {"type": "error", "message": f"SSL check failed: {str(e)}"}
+        yield yield_error(f"SSL check failed: {str(e)}")

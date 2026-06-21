@@ -1,13 +1,14 @@
 import asyncio
 import math
+from tools.utils import yield_log, yield_success, yield_error, ToolEvent
 
 async def run(params: dict):
     password = params.get("password", "").strip()
     if not password:
-        yield {"type": "error", "message": "Password string is required."}
+        yield yield_error("Password string is required.")
         return
         
-    yield {"type": "log", "message": "Calculating entropy sets..."}
+    yield yield_log("Calculating entropy sets...")
     await asyncio.sleep(0.3)
     
     try:
@@ -28,11 +29,11 @@ async def run(params: dict):
         elif entropy > 60: strength = "Strong"
         elif entropy > 40: strength = "Moderate"
         
-        yield {"type": "found", "message": f"Length: {length}"}
-        yield {"type": "found", "message": f"Alphabet pool size: {pool}"}
-        yield {"type": "found", "message": f"Entropy: {entropy:.2f} bits"}
-        yield {"type": "found", "message": f"Strength: {strength}"}
+        yield ToolEvent("found", message=f"Length: {length}")
+        yield ToolEvent("found", message=f"Alphabet pool size: {pool}")
+        yield ToolEvent("found", message=f"Entropy: {entropy:.2f} bits")
+        yield ToolEvent("found", message=f"Strength: {strength}")
         
-        yield {"type": "success", "message": "Password analysis finished."}
+        yield yield_success("Password analysis finished.")
     except Exception as e:
-        yield {"type": "error", "message": f"Calculation error: {str(e)}"}
+        yield yield_error(f"Calculation error: {str(e)}")

@@ -3,6 +3,7 @@ import shutil
 import tarfile
 import zipfile
 import asyncio
+from tools.utils import yield_log, yield_progress, yield_success, yield_error
 
 def extract_archive_sync(archive_path, dest_dir):
     os.makedirs(dest_dir, exist_ok=True)
@@ -38,7 +39,7 @@ async def run(params: dict):
     output_folder = params.get("output_folder", "").strip()
 
     if not input_path or not output_folder:
-        yield {"type": "error", "message": "Both source path and destination path are required."}
+        yield yield_error("Both source path and destination path are required.")
         return
 
     input_path = os.path.expanduser(input_path)
@@ -46,22 +47,22 @@ async def run(params: dict):
 
     if mode == "extract":
         if not os.path.isfile(input_path):
-            yield {"type": "error", "message": f"Archive file '{input_path}' not found."}
+            yield yield_error(f"Archive file '{input_path}' not found.")
             return
             
-        yield {"type": "log", "message": f"Extracting archive: {os.path.basename(input_path)}..."}
+        yield yield_log(f"Extracting archive: {os.path.basename(input_path)}...")
         success, msg = await asyncio.to_thread(extract_archive_sync, input_path, output_folder)
         if success:
-            yield {"type": "progress", "percent": 100.0}
-            yield {"type": "log", "message": msg}
-            yield {"type": "success", "message": "Extraction complete."}
+            yield yield_progress(100.0)
+            yield yield_log(msg)
+            yield yield_success("Extraction complete.")
         else:
-            yield {"type": "error", "message": msg}
+            yield yield_error(msg)
 
     else:
         # Create archive
         if not os.path.isdir(input_path):
-            yield {"type": "error", "message": f"Source directory '{input_path}' does not exist."}
+            yield yield_error(f"Source directory '{input_path}' does not exist.")
             return
             
         # Determine output file path
@@ -73,11 +74,11 @@ async def run(params: dict):
         else:
             output_file = output_folder
 
-        yield {"type": "log", "message": f"Compressing folder '{os.path.basename(input_path)}' as {format_type}..."}
+        yield yield_log(f"Compressing folder '{os.path.basename(input_path)}' as {format_type}...")
         success, msg = await asyncio.to_thread(create_archive_sync, input_path, output_file, format_type)
         if success:
-            yield {"type": "progress", "percent": 100.0}
-            yield {"type": "log", "message": msg}
-            yield {"type": "success", "message": "Compression complete."}
+            yield yield_progress(100.0)
+            yield yield_log(msg)
+            yield yield_success("Compression complete.")
         else:
-            yield {"type": "error", "message": msg}
+            yield yield_error(msg)
