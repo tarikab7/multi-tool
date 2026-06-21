@@ -496,6 +496,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const theme = dot.dataset.theme;
             applyTheme(theme);
         });
+        dot.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                const theme = dot.dataset.theme;
+                applyTheme(theme);
+            }
+        });
     });
     
     function applyTheme(theme) {
@@ -509,8 +516,10 @@ document.addEventListener("DOMContentLoaded", () => {
         themeDots.forEach(dot => {
             if (dot.dataset.theme === theme) {
                 dot.classList.add("active");
+                dot.setAttribute("aria-pressed", "true");
             } else {
                 dot.classList.remove("active");
+                dot.setAttribute("aria-pressed", "false");
             }
         });
         
