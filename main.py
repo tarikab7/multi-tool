@@ -186,16 +186,26 @@ def browse_path(path: str = ""):
                 "is_dir": True
             })
             
-        for name in sorted(os.listdir(path)):
-            if name.startswith('.'):
-                continue
-            full_path = os.path.join(path, name)
-            is_dir = os.path.isdir(full_path)
-            items.append({
-                "name": name,
-                "path": full_path,
-                "is_dir": is_dir
-            })
+        # ⚡ Bolt Optimization: Use os.scandir instead of os.listdir
+        # scandir yields DirEntry objects containing cached stat info, avoiding
+        # the extra os.path.isdir() syscalls and significantly improving iteration speed.
+        child_items = []
+        with os.scandir(path) as it:
+            for entry in it:
+                if entry.name.startswith('.'):
+                    continue
+                child_items.append({
+                    "name": entry.name,
+                    "path": entry.path,
+                    "is_dir": entry.is_dir(follow_symlinks=True)
+                })
+
+        # Sort child items to maintain alphabetical order
+        child_items.sort(key=lambda x: x["name"])
+
+        # Extend items (which contains the '..' entry if applicable) with sorted children
+        items.extend(child_items)
+
         return {
             "current_path": path,
             "items": items
