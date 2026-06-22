@@ -1,12 +1,13 @@
 import asyncio
+from tools.utils import yield_log, yield_error, yield_success, ToolEvent
 
 async def run(params: dict):
     share_url = params.get("share_url", "").strip()
     if not share_url:
-        yield {"type": "error", "message": "Google Drive sharing URL is required."}
+        yield yield_error("Google Drive sharing URL is required.")
         return
         
-    yield {"type": "log", "message": "Parsing Drive sharing link elements..."}
+    yield yield_log("Parsing Drive sharing link elements...")
     await asyncio.sleep(0.5)
     
     # Types of Drive links:
@@ -25,8 +26,8 @@ async def run(params: dict):
             
     if file_id:
         direct_url = f"https://docs.google.com/uc?export=download&id={file_id}"
-        yield {"type": "found", "message": f"File ID: {file_id}"}
-        yield {"type": "found", "message": f"Direct Link: {direct_url}"}
-        yield {"type": "success", "message": "Successfully converted to direct download link."}
+        yield ToolEvent(type="found", message=f"File ID: {file_id}")
+        yield ToolEvent(type="found", message=f"Direct Link: {direct_url}")
+        yield yield_success("Successfully converted to direct download link.")
     else:
-        yield {"type": "error", "message": "Unable to extract file ID. Ensure link has standard Drive format."}
+        yield yield_error("Unable to extract file ID. Ensure link has standard Drive format.")

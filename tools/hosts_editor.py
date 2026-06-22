@@ -1,5 +1,6 @@
 import os
 import asyncio
+from tools.utils import yield_log, yield_error, yield_success, yield_progress
 
 HOSTS_PATH = "/etc/hosts"
 
@@ -37,37 +38,37 @@ async def run(params: dict):
     domain = params.get("domain", "").strip()
 
     if action == "view":
-        yield {"type": "log", "message": f"Reading active loopback rules from: {HOSTS_PATH}..."}
+        yield yield_log(f"Reading active loopback rules from: {HOSTS_PATH}...")
         rules = await asyncio.to_thread(read_hosts_entries)
         
         if rules:
-            yield {"type": "log", "message": f"Found {len(rules)} loopback redirection entries:"}
+            yield yield_log(f"Found {len(rules)} loopback redirection entries:")
             for ip, domains in rules:
-                yield {"type": "log", "message": f"  IP: {ip:<10} ➔ {', '.join(domains)}"}
+                yield yield_log(f"  IP: {ip:<10} ➔ {', '.join(domains)}")
         else:
-            yield {"type": "log", "message": "No custom loopback redirection rules found in hosts file."}
+            yield yield_log("No custom loopback redirection rules found in hosts file.")
             
-        yield {"type": "progress", "percent": 100.0}
-        yield {"type": "success", "message": "Hosts lookup complete."}
+        yield yield_progress(100.0)
+        yield yield_success("Hosts lookup complete.")
         
     else:
         # Add rule
         if not domain:
-            yield {"type": "error", "message": "Domain name is required to block."}
+            yield yield_error("Domain name is required to block.")
             return
             
         # Clean domain
         domain = domain.replace("http://", "").replace("https://", "").split("/")[0]
         
-        yield {"type": "log", "message": f"Attempting to add blocking entry for: {domain}..."}
+        yield yield_log(f"Attempting to add blocking entry for: {domain}...")
         success, result = await asyncio.to_thread(add_hosts_entry, domain)
         
-        yield {"type": "progress", "percent": 100.0}
+        yield yield_progress(100.0)
         if success:
-            yield {"type": "log", "message": result}
-            yield {"type": "success", "message": f"Domain {domain} is now blocked."}
+            yield yield_log(result)
+            yield yield_success(f"Domain {domain} is now blocked.")
         else:
-            yield {"type": "log", "message": "Permission Denied: Root/Administrator access is required to write to /etc/hosts."}
-            yield {"type": "log", "message": "\nTo apply this rule, execute the following command in your terminal:"}
-            yield {"type": "log", "message": f"  👉 {result}"}
-            yield {"type": "success", "message": "Action completed (manual step required)."}
+            yield yield_log("Permission Denied: Root/Administrator access is required to write to /etc/hosts.")
+            yield yield_log("\nTo apply this rule, execute the following command in your terminal:")
+            yield yield_log(f"  👉 {result}")
+            yield yield_success("Action completed (manual step required).")
