@@ -1,0 +1,2438 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Multi-tool</title>
+
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&amp;family=Outfit:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="/static/style.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="app-container">
+
+<aside class="sidebar">
+<div class="sidebar-header">
+<div class="logo">
+<span class="logo-icon">▲</span>
+<span class="logo-text">MULTI-TOOL</span>
+</div>
+<span class="suite-badge">v3.1</span>
+</div>
+
+<div class="theme-customizer" role="group" aria-label="Theme selector">
+<span class="theme-dot theme-dot-purple active" data-theme="purple" title="Obsidian Purple" role="button" tabindex="0" aria-label="Obsidian Purple theme" aria-pressed="true"></span>
+<span class="theme-dot theme-dot-cyan" data-theme="cyan" title="Cyberpunk Cyan" role="button" tabindex="0" aria-label="Cyberpunk Cyan theme" aria-pressed="false"></span>
+<span class="theme-dot theme-dot-green" data-theme="green" title="Matrix Green" role="button" tabindex="0" aria-label="Matrix Green theme" aria-pressed="false"></span>
+<span class="theme-dot theme-dot-pink" data-theme="pink" title="Sunset Pink" role="button" tabindex="0" aria-label="Sunset Pink theme" aria-pressed="false"></span>
+</div>
+
+<div class="search-box">
+<span class="search-icon">🔍</span>
+<input id="tool-search" placeholder="Search tools..." type="text"/>
+</div>
+
+<nav class="sidebar-nav">
+
+<div class="nav-category" id="cat-favorites" style="display: none;">
+<div class="category-header">
+<span class="category-title">⭐ Favorites</span>
+<span class="category-toggle">▼</span>
+</div>
+<div class="category-items" id="favorites-items">
+
+</div>
+</div>
+
+<div class="nav-category" id="cat-audio">
+<div class="category-header">
+<span class="category-title">🎵 Audio &amp; Music</span>
+<span class="category-toggle">▼</span>
+</div>
+<div class="category-items">
+<button class="nav-item active" data-tags="music playlist download audio yt youtube mp3 tracks track downloader mp3 keyless" data-tool="spotify_downloader">🎵 Spotify Downloader</button>
+<button class="nav-item" data-tags="tag id3 metadata rename cover music track tagger itunes musicbrainz album genre artist mp3 keyless" data-tool="mp3_tagger">🏷️ MP3 Tagger</button>
+<button class="nav-item" data-tags="stereo downmix audio sound converter mp3 channel stereo mono" data-tool="audio_converter">🔊 Stereo Downmixer</button>                        <button class="nav-item" data-tool="audio_trimmer" data-tags="audio trim cut clip split mp3 wav ffmpeg keyless">✂️ Audio Trimmer</button>
+                        <button class="nav-item" data-tool="bpm_detector" data-tags="audio bpm beats tempo music detect analyze key signature">🥁 BPM & Key Detector</button>
+                        <button class="nav-item" data-tool="id3_cleaner" data-tags="id3 metadata strip clean mp3 privacy tags removal">🧹 ID3 Metadata Cleaner</button>
+                        <button class="nav-item" data-tool="text_to_speech" data-tags="tts speech voice speak google audio keyless read speak narrator">🗣️ Text To Speech (TTS)</button>
+</div>
+</div>
+
+<div class="nav-category" id="cat-video-image">
+<div class="category-header">
+<span class="category-title">🖼️ Video &amp; Image</span>
+<span class="category-toggle">▼</span>
+</div>
+<div class="category-items">
+<button class="nav-item" data-tags="image heic conversion jpg png heif photo bulk converter" data-tool="heic_converter">🖼️ HEIC Converter</button>
+<button class="nav-item" data-tags="video audio compress size reduce file mp4 mp3 size reduction" data-tool="media_compressor">🗜️ Video/Audio Compressor</button>
+<button class="nav-item" data-tags="gif maker extractor video to gif frame image animate mp4 converter" data-tool="gif_tool">🎬 GIF Maker/Extractor</button>
+<button class="nav-item" data-tags="subtitles srt vtt txt transcribe video movie track subtitle extraction" data-tool="subtitles_extractor">📝 Subtitles Tool</button>
+<button class="nav-item" data-tags="image convert resize batch bulk format crop watermarks png jpg webp" data-tool="image_converter">📐 Image Bulk Tool</button>
+<button class="nav-item" data-tags="video thumbnail screenshot poster summary frames index sheet" data-tool="thumbnail_sheet">🎞️ Video Thumbnailer</button>                        <button class="nav-item" data-tool="video_stabilizer" data-tags="video stabilize shaky smooth filter ffmpeg vid.stab camera">🎥 Video Stabilizer</button>
+                        <button class="nav-item" data-tool="image_bg_remover" data-tags="image background remove bg transparent keyless api silhouette mask">✂️ Image Background Remover</button>
+                        <button class="nav-item" data-tool="video_to_audio" data-tags="video audio extract convert mp3 wav ffmpeg mkv mp4 track sound">🎵 Video To Audio Extractor</button>
+                        <button class="nav-item" data-tool="gif_to_mp4" data-tags="gif mp4 convert video animation compress web-friendly loop">🎞️ GIF To MP4 Video</button>
+                        <button class="nav-item" data-tool="pdf_to_images" data-tags="pdf image page extract png jpg convert export split">📄 PDF Page Extractor</button>
+                        <button class="nav-item" data-tool="color_palette_extractor" data-tags="image color palette extract hex swatch pillow pixel cluster k-means">🎨 Color Palette Extractor</button>
+                        <button class="nav-item" data-tool="image_exif_viewer" data-tags="image exif metadata gps camera date viewer tags lens capture">📷 Image EXIF Viewer</button>
+                        <button class="nav-item" data-tool="video_rotator" data-tags="video rotate flip transpose angle ffmpeg vertical horizontal orientation">🔄 Video Rotator/Flipper</button>
+</div>
+</div>
+
+<div class="nav-category" id="cat-file-ops">
+<div class="category-header">
+<span class="category-title">📁 File Operations</span>
+<span class="category-toggle">▼</span>
+</div>
+<div class="category-items">                         <button class="nav-item" data-tool="pdf_tool" data-tags="pdf merge split extract encrypt security document pdf tool">📄 PDF Document Tool</button>
+<button class="nav-item" data-tags="duplicate find clean delete files storage duplicate file finder scan md5 hash" data-tool="duplicate_finder">👯 Duplicate Finder</button>
+<button class="nav-item" data-tags="shred secure delete wipe shredder privacy unlink zero-fill file removal" data-tool="secure_shredder">♻️ Secure Shredder</button>
+<button class="nav-item" data-tags="bulk rename files filenames batch organize replace regex rename tool" data-tool="bulk_renamer">✍️ Bulk File Renamer</button>
+<button class="nav-item" data-tags="archive zip unzip tar rar pack unpack compress unzip backup manager" data-tool="archive_manager">📦 Archive Manager</button>
+<button class="nav-item" data-tags="folder size space disk storage usage tree list analyzer directory" data-tool="folder_analyzer">📊 Folder Size Analyzer</button>                        <button class="nav-item" data-tool="hash_generator" data-tags="file hash md5 sha1 sha256 sha512 checksum integrity verify signature">🔢 File Hash Generator</button>
+                        <button class="nav-item" data-tool="file_encrypter" data-tags="file encrypt decrypt aes security password cryptography key vault lock">🔒 AES File Cryptographer</button>
+                        <button class="nav-item" data-tool="directory_tree" data-tags="directory tree structure markdown ascii visual list project map layout">🌳 Directory Tree Generator</button>
+                        <button class="nav-item" data-tool="broken_symlinks" data-tags="symlink link clean scan broken orphan shortcut system dangling path">🔗 Broken Symlinks Cleaner</button>
+                        <button class="nav-item" data-tool="empty_folders" data-tags="folder empty clean scan recursive delete clean space storage prune">🗑️ Empty Folders Cleaner</button>
+                        <button class="nav-item" data-tool="file_splitter" data-tags="file split merge join chunk large storage divide volume">✂️ File Splitter & Joiner</button>
+                        <button class="nav-item" data-tool="log_analyzer" data-tags="log analyze web server nginx apache status ip scan records client codes">📝 Server Log Analyzer</button>
+                        <button class="nav-item" data-tool="temp_cleaner" data-tags="temp cache clean system disk space temporary clean cleanup optimize logs">🧹 Temp Cache Cleaner</button>
+</div>
+</div>
+
+<div class="nav-category" id="cat-cloud-backup">
+<div class="category-header">
+<span class="category-title">☁️ Cloud &amp; Backup</span>
+<span class="category-toggle">▼</span>
+</div>
+<div class="category-items">
+<button class="nav-item" data-tags="google photos sync download backup cloud merge album photo library" data-tool="google_photos_combiner">☁️ Google Photos Combiner</button>
+<button class="nav-item" data-tags="date recognise rename photo timestamp exif filename date organizer" data-tool="date_recognizer">📅 Date Recognizer</button>
+<button class="nav-item" data-tags="snapchat spotlight memories download backup export history processor" data-tool="snapchat_processor">👻 Snapchat Processor</button>
+<button class="nav-item" data-tags="metadata swap clear EXIF swap clean strip privacy properties swapper" data-tool="metadata_swapper">🔄 Metadata Swapper</button>
+<button class="nav-item" data-tags="organize directory files extension category sort clean extension organizer" data-tool="directory_organizer">🗂️ Extension Organizer</button>                        <button class="nav-item" data-tool="s3_downloader" data-tags="s3 amazon download bucket cloud backup public files keyless aws storage">☁️ S3 Public Bucket Downloader</button>
+                        <button class="nav-item" data-tool="web_scraper" data-tags="web scrape extract headers links page parser html details soup beautifulsoup">🕷️ Web Scraper</button>
+                        <button class="nav-item" data-tool="github_repo_backup" data-tags="github git backup clone zip download keyless repository public code archive">🐙 GitHub Repository Backuper</button>
+                        <button class="nav-item" data-tool="rss_feed_reader" data-tags="rss xml feed read parse blog articles links reader syndication">📻 RSS Feed Reader</button>
+                        <button class="nav-item" data-tool="gdrive_link_converter" data-tags="google drive gdrive link direct download converter sharing export url">🔗 GDrive Direct Link Converter</button>
+</div>
+</div>
+
+<div class="nav-category" id="cat-network-web">
+<div class="category-header">
+<span class="category-title">🌐 Network &amp; Web</span>
+<span class="category-toggle">▼</span>
+</div>
+<div class="category-items">
+<button class="nav-item" data-tags="dir search brute force path fuzz web url scanner discovery admin" data-tool="directory_bruteforcer">🔍 Dir Bruteforcer</button>
+<button class="nav-item" data-tags="network port scan local host ip socket scanner check open ports" data-tool="port_scanner">🔌 Local Port Scanner</button>
+<button class="nav-item" data-tags="network ping dns lookup traceroute geoip doh ip public internet cloudflare ipapi" data-tool="network_diagnostics">🚦 Network Diagnostics</button>
+<button class="nav-item" data-tags="internet speed test download upload latency ping network speed tester" data-tool="speed_tester">⚡ Network Speed Tester</button>
+<button class="nav-item" data-tags="weather forecast city temperature wind openmeteo live forecast station" data-tool="weather_station">🌦️ Weather Station</button>
+<button class="nav-item" data-tags="qr code generate link text download qr code generator" data-tool="qr_generator">📱 QR Code Generator</button>                        <button class="nav-item" data-tool="dns_propagation" data-tags="dns propagation query lookup records cloudflare google a mx txt cname ns">🌍 DNS Propagation Checker</button>
+                        <button class="nav-item" data-tool="whois_lookup" data-tags="whois domain lookup registration registrar keyless rdap ownership expiry">ℹ️ WHOIS Lookup</button>
+                        <button class="nav-item" data-tool="http_header_checker" data-tags="http header inspect redirect response status hops curl headers secure cookies">🔍 HTTP Header Inspector</button>
+                        <button class="nav-item" data-tool="ssl_expiry_checker" data-tags="ssl tls certificate expiry warning issuer security domain cert https">🔒 SSL Expiry Checker</button>
+                        <button class="nav-item" data-tool="subnet_calculator" data-tags="network subnet mask calculator ip cidr broadcast range host addresses mask">🧮 Subnet Calculator</button>
+                        <button class="nav-item" data-tool="mac_vendor_lookup" data-tags="mac vendor lookup address hardware manufacturer keyless card ethernet network">🏷️ MAC Vendor Lookup</button>
+                        <button class="nav-item" data-tool="user_agent_parser" data-tags="user agent parse browser os device engine headers platform version">🤖 User-Agent Parser</button>
+                        <button class="nav-item" data-tool="url_shortener" data-tags="url link shorten expand tinyurl redirects keyless tiny links resolve">🔗 URL Shortener & Expander</button>
+                        <button class="nav-item" data-tool="ping_sweeper" data-tags="ping sweep network local ip scan active hosts icmp scanner network discovery">📡 Local Subnet Ping Sweeper</button>
+</div>
+</div>
+
+<div class="nav-category" id="cat-system-utils">
+<div class="category-header">
+<span class="category-title">⚙️ System Utilities</span>
+<span class="category-toggle">▼</span>
+</div>
+<div class="category-items">
+<button class="nav-item" data-tags="system resource cpu ram disk monitoring usage dashboard monitor" data-tool="system_monitor">📈 Resource Monitor</button>
+<button class="nav-item" data-tags="credentials password safe lock database credentials manager vault secure" data-tool="credentials_safe">🔐 Credentials Safe</button>
+<button class="nav-item" data-tags="hosts dns redirect block website hosts file editor local domain" data-tool="hosts_editor">🌐 Hosts File Editor</button>                        <button class="nav-item" data-tool="cpu_stress" data-tags="cpu stress test hardware thermals math workload benchmark stability cores">🔥 CPU Stress Tester</button>
+                        <button class="nav-item" data-tool="disk_benchmark" data-tags="disk write read benchmark speed file stream drive harddisk speedtest">💾 Disk Benchmark Speed</button>
+                        <button class="nav-item" data-tool="wifi_networks" data-tags="wifi wireless scan networks ssid signal security accesspoint adapter">📶 Nearby Wi-Fi Scanner</button>
+                        <button class="nav-item" data-tool="process_killer" data-tags="process kill pid terminate task list psutil dashboard close memory">💀 Process Manager & Killer</button>
+                        <button class="nav-item" data-tool="cron_parser" data-tags="cron schedule expression explanation parse time interval automate helper">⏰ Cron Schedule Explainer</button>
+                        <button class="nav-item" data-tool="uuid_generator" data-tags="uuid guid generate token bulk random v1 v4 v5 identifier token unique">🆔 Bulk UUID Generator</button>
+</div>
+</div>
+
+<div class="nav-category" id="cat-code-data">
+<div class="category-header">
+<span class="category-title">💻 Code &amp; Data</span>
+<span class="category-toggle">▼</span>
+</div>
+<div class="category-items">
+<button class="nav-item" data-tags="letter combination generate word permutation permutation generator passwords" data-tool="combination_generator">🔢 Letter Generator</button>
+<button class="nav-item" data-tags="code format lint style prettier black js python css html formatter" data-tool="code_formatter">め Code Formatter</button>
+<button class="nav-item" data-tags="csv json convert parse format excel database data translator" data-tool="data_translator">💱 CSV ↔ JSON Translator</button>
+<button class="nav-item" data-tags="base64 url urlencode urldecode encode decode cryptography binary base64 tool" data-tool="encoder_decoder">🔏 base64/URL Tool</button>
+<button class="nav-item" data-tags="regex expression match pattern find test regex extractor" data-tool="regex_extractor">🔬 Regex Extractor</button>
+<button class="nav-item" data-tags="markdown html text convert md format render reader markdown converter" data-tool="markdown_converter">✍️ Markdown Converter</button>                        <button class="nav-item" data-tool="json_minifier" data-tags="json format minify validate parser beautify code script object lint">📦 JSON Formatter/Minifier</button>
+                        <button class="nav-item" data-tool="sql_formatter" data-tags="sql format query beautify styling database sql-formatter mysql postgresql syntax">🗄️ SQL Query Formatter</button>
+                        <button class="nav-item" data-tool="xml_to_json" data-tags="xml json convert parse translate structured data markup dictionary">🔄 XML ➔ JSON Converter</button>
+                        <button class="nav-item" data-tool="diff_checker" data-tags="diff compare text side-by-side patch changes differences git comparison check">🔀 Diff Side-By-Side Checker</button>
+                        <button class="nav-item" data-tool="word_counter" data-tags="word counter count syllables lines characters reading time metadata frequency density">🧮 Word & Text Counter</button>
+                        <button class="nav-item" data-tool="ip_validator" data-tags="ip validator ipv4 ipv6 validate cidr range address checks mask">🚦 IP Address Validator</button>
+                        <button class="nav-item" data-tool="markdown_to_pdf" data-tags="markdown pdf compile report documentation export styling document compiler">📄 Markdown To PDF Compiler</button>
+                        <button class="nav-item" data-tool="password_strength" data-tags="password strength complexity entropy crack time estimate check safety validator">🔑 Password Strength Evaluator</button>
+                        <button class="nav-item" data-tool="jwt_decoder" data-tags="jwt decoder json web token claim header payload signature keys oauth">🗝️ JWT Token Decoder</button>
+                        <button class="nav-item" data-tool="lorem_ipsum" data-tags="lorem ipsum placeholder text generate sentences paragraphs dummy mockup layout">✍️ Lorem Ipsum Generator</button>
+</div>
+</div>
+
+
+<div class="nav-category" id="cat-settings">
+<div class="category-header">
+<span class="category-title">⚙️ Settings & Configuration</span>
+<span class="category-toggle">▼</span>
+</div>
+<div class="category-items">
+    <button class="nav-item" data-tool="settings" data-tags="settings config api keys spotify youtube lastfm setup">⚙️ System Settings</button>
+</div>
+</div>
+
+</nav>
+<div class="sidebar-footer">
+<div class="system-status">
+<div class="status-indicator online"></div>
+<span class="status-text">Server: Online</span>
+</div>
+</div>
+</aside>
+
+<main class="workspace">
+<header class="workspace-header">
+<h1 id="active-tool-title">Spotify Downloader</h1>
+<div class="active-job-indicator" id="global-job-badge" style="display: none;">
+<span class="spinner"></span>
+<span class="job-status">Running Task...</span>
+</div>
+</header>
+<section class="workspace-body">
+
+
+
+<div class="tool-panel" id="panel-settings">
+    <div class="tool-description-block">
+        <p class="tool-description">Configure the system API keys required for external services. Ensure your keys match the specific format requirements. After saving, you can click "Verify Keys" to check if they are valid against the remote APIs.</p>
+    </div>
+    <form class="tool-form" id="form-settings">
+        <div class="form-group">
+            <label for="settings-spotify-client-id">Spotify Client ID (32 hex characters)</label>
+            <input type="text" id="settings-spotify-client-id" name="spotify_client_id" placeholder="Enter Spotify Client ID...">
+        </div>
+        <div class="form-group">
+            <label for="settings-spotify-client-secret">Spotify Client Secret (32 hex characters)</label>
+            <input type="text" id="settings-spotify-client-secret" name="spotify_client_secret" placeholder="Enter Spotify Client Secret...">
+        </div>
+        <div class="form-group">
+            <label for="settings-youtube-api-keys">YouTube API Keys (comma separated, starting with 'AIzaSy')</label>
+            <input type="text" id="settings-youtube-api-keys" name="youtube_api_keys" placeholder="AIzaSy..., AIzaSy...">
+        </div>
+        <div class="form-group">
+            <label for="settings-lastfm-api-key">Last.fm API Key</label>
+            <input type="text" id="settings-lastfm-api-key" name="last_fm_api_key" placeholder="Enter Last.fm API Key...">
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" class="btn-run" id="btn-save-settings">Save Settings</button>
+            <button type="button" class="btn-run" id="btn-verify-settings" style="background-color: var(--theme-color); opacity: 0.8;">Verify Keys</button>
+        </div>
+    </form>
+
+    <div id="settings-verification-results" style="margin-top: 20px; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px; display: none;">
+        <h4>Verification Results</h4>
+        <div id="verification-content" style="margin-top: 10px; font-family: monospace;"></div>
+    </div>
+</div>
+
+<div class="tool-panel active" id="panel-spotify_downloader">
+<div class="tool-description-block">
+<p class="tool-description">Download songs from public Spotify playlists. Extracts playlist tracklists keylessly and resolves matching audio files using yt-dlp search to download high-quality MP3 tracks automatically.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Playlist URL</strong>: <code>https://open.spotify.com/playlist/37i9dQZEVXbMDoHDwVN2tF</code> (Top 50 - Global)<br/><strong>Output</strong>: Downloads MP3 files saved under your specified directory (e.g., <code>downloads/</code>) named as <code>Artist - Song.mp3</code>.</p>
+</div>
+</div>
+<form class="tool-form" id="form-spotify_downloader">
+<div class="form-group">
+<label for="spotify-urls">Spotify Playlist URLs (comma separated)</label>
+<input id="spotify-urls" placeholder="https://open.spotify.com/playlist/..." required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="spotify-dest">Download Directory</label>
+<input id="spotify-dest" placeholder="e.g., downloads" type="text" value="downloads"/>
+</div>
+<button class="btn-run" type="submit">Start Download</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-mp3_tagger">
+<div class="tool-description-block">
+<p class="tool-description">Batch identify and tag local MP3 files. Automatically updates ID3 metadata (Title, Artist, Album, Genre) and embeds high-resolution cover art keylessly using the iTunes Search API and MusicBrainz.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Path</strong>: <code>/home/tarik/Downloads/unlabeled_music</code><br/><strong>Output</strong>: Automatically extracts song names from filenames, updates ID3 metadata, and sets 600x600 cover artwork.</p>
+</div>
+</div>
+<form class="tool-form" id="form-mp3_tagger">
+<div class="form-group">
+<label for="tagger-dir">MP3 Directory Path</label>
+<input id="tagger-dir" placeholder="e.g., /home/tarik/Music/album" required="" type="text"/>
+</div>
+<button class="btn-run" type="submit">Scan &amp; Update Tags</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-heic_converter">
+<div class="tool-description-block">
+<p class="tool-description">Convert iPhone HEIC images to standard JPG or PNG formats in bulk. Preserves image details and EXIF capture date metadata while rendering batch conversions.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Input</strong>: <code>/home/tarik/Pictures/iPhone_Export</code> -&gt; Select format: <strong>JPG</strong><br/><strong>Output</strong>: Conversions saved in a <code>converted/</code> subdirectory under the source path.</p>
+</div>
+</div>
+<form class="tool-form" id="form-heic_converter">
+<div class="form-row">
+<div class="form-group">
+<label for="heic-input">HEIC Folder Path</label>
+<input id="heic-input" placeholder="e.g., /home/tarik/Pictures/HEIC" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="heic-output">JPEG Output Folder</label>
+<input id="heic-output" placeholder="e.g., /home/tarik/Pictures/JPEG" required="" type="text"/>
+</div>
+</div>
+<button class="btn-run" type="submit">Convert Images</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-audio_converter">
+<div class="tool-description-block">
+<p class="tool-description">Convert stereo or multi-channel audio tracks into clean, high-quality mono/stereo downmixed formats using FFmpeg.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Input File</strong>: <code>/home/tarik/Audio/podcast_raw.wav</code> -&gt; Select <strong>Downmix to Stereo</strong><br/><strong>Output</strong>: Outputs a normalized, space-efficient <code>podcast_raw_stereo.mp3</code> or <code>.wav</code> file.</p>
+</div>
+</div>
+<form class="tool-form" id="form-audio_converter">
+<div class="form-group">
+<label for="mixer-input">Input File or Folder Path</label>
+<input id="mixer-input" placeholder="e.g., /home/tarik/Videos/movie.mkv" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="mixer-output">Output Folder (Optional)</label>
+<input id="mixer-output" placeholder="Defaults to same folder" type="text"/>
+</div>
+<button class="btn-run" type="submit">Downmix Channels</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-media_compressor">
+<div class="tool-description-block">
+<p class="tool-description">Reduce the file size of large video and audio files using optimized H.264/AAC encoding, targeting a specific target file size or bitrate.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Input</strong>: <code>large_video.mp4</code> -&gt; target size <strong>25MB</strong><br/><strong>Output</strong>: Compresses the file to fit email or sharing limits without significant quality loss.</p>
+</div>
+</div>
+<form class="tool-form" id="form-media_compressor">
+<div class="form-group">
+<label for="comp-input">Input File Path</label>
+<input id="comp-input" placeholder="e.g., /home/tarik/Videos/input.mp4" required="" type="text"/>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="comp-target">Target Size Limit</label>
+<select id="comp-target">
+<option value="8">8 MB (Discord Free)</option>
+<option value="25">25 MB (Discord Nitro Basic)</option>
+<option value="50">50 MB (Email attachment)</option>
+<option value="100">100 MB</option>
+</select>
+</div>
+<div class="form-group">
+<label for="comp-output">Output Folder (Optional)</label>
+<input id="comp-output" placeholder="Defaults to same folder" type="text"/>
+</div>
+</div>
+<button class="btn-run" type="submit">Compress Media</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-gif_tool">
+<div class="tool-description-block">
+<p class="tool-description">Generate animated GIFs from videos or extract video frames as individual image files.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Input</strong>: <code>clip.mp4</code> -&gt; Set Start: <strong>00:00:02</strong>, End: <strong>00:00:05</strong><br/><strong>Output</strong>: Produces a high-quality looping <code>clip.gif</code>.</p>
+</div>
+</div>
+<form class="tool-form" id="form-gif_tool">
+<div class="form-group">
+<label for="gif-mode">Operation Mode</label>
+<select id="gif-mode">
+<option value="create">Create GIF from Video</option>
+<option value="extract">Extract frames from GIF/Video</option>
+</select>
+</div>
+<div class="form-group">
+<label for="gif-input">Input File Path</label>
+<input id="gif-input" placeholder="e.g., /home/tarik/Videos/input.mp4" required="" type="text"/>
+</div>
+<div class="form-row" id="gif-creation-row">
+<div class="form-group">
+<label for="gif-fps">Frame Rate (FPS)</label>
+<input id="gif-fps" max="30" min="1" type="number" value="10"/>
+</div>
+<div class="form-group">
+<label for="gif-width">Width (Pixels)</label>
+<input id="gif-width" placeholder="Width in pixels" type="number" value="480"/>
+</div>
+</div>
+<div class="form-group">
+<label for="gif-output">Output Folder/File Path</label>
+<input id="gif-output" placeholder="Where to save the output" required="" type="text"/>
+</div>
+<button class="btn-run" type="submit">Start GIF Task</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-subtitles_extractor">
+<div class="tool-description-block">
+<p class="tool-description">Extract built-in subtitle tracks (SRT, VTT, etc.) from video files (MKV, MP4) or convert subtitle formats.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Input</strong>: <code>movie.mkv</code> -&gt; Select track <strong>1 (English)</strong><br/><strong>Output</strong>: Extracts subtitle file <code>movie_english.srt</code> next to the source video.</p>
+</div>
+</div>
+<form class="tool-form" id="form-subtitles_extractor">
+<div class="form-group">
+<label for="sub-input">Video File Path</label>
+<input id="sub-input" placeholder="e.g., /home/tarik/Videos/movie.mkv" required="" type="text"/>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="sub-track">Subtitle Track Index</label>
+<input id="sub-track" min="0" placeholder="0 = first track" type="number" value="0"/>
+</div>
+<div class="form-group">
+<label for="sub-output">Output Subtitle (.srt)</label>
+<input id="sub-output" placeholder="e.g., /home/tarik/Videos/movie.srt" type="text"/>
+</div>
+</div>
+<button class="btn-run" type="submit">Extract Subtitles</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-image_converter">
+<div class="tool-description-block">
+<p class="tool-description">Perform bulk image operations including format conversion (PNG, JPG, WebP), resizing, cropping, and adding watermarks.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Input</strong>: <code>/home/tarik/Pictures/blog</code> -&gt; Set Format: <strong>WebP</strong>, Width: <strong>800px</strong><br/><strong>Output</strong>: Saves optimized, fast-loading images for web hosting.</p>
+</div>
+</div>
+<form class="tool-form" id="form-image_converter">
+<div class="form-group">
+<label for="img-dir">Images Directory</label>
+<input id="img-dir" placeholder="e.g., /home/tarik/Pictures/Album" required="" type="text"/>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="img-width">New Width (Pixels, optional)</label>
+<input id="img-width" placeholder="Keep empty to preserve aspect ratio" type="number"/>
+</div>
+<div class="form-group">
+<label for="img-format">Target Format</label>
+<select id="img-format">
+<option value="WEBP">WEBP</option>
+<option value="JPEG">JPEG</option>
+<option value="PNG">PNG</option>
+<option value="BMP">BMP</option>
+</select>
+</div>
+</div>
+<div class="form-group">
+<label for="img-output">Output Folder</label>
+<input id="img-output" placeholder="Folder to save resized images" required="" type="text"/>
+</div>
+<button class="btn-run" type="submit">Batch Process Images</button>
+</form>
+</div>
+
+                <div class="tool-panel" id="panel-pdf_tool">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Manage PDF documents: merge multiple PDFs into one, split pages, extract text, or secure documents with passwords.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Example Input</strong>: <code>invoice_part1.pdf, invoice_part2.pdf</code> -> Select <strong>Merge</strong><br><strong>Output</strong>: Combines files into a single <code>merged_document.pdf</code>.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-pdf_tool">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pdf-mode">Operation Mode</label>
+                                <select id="pdf-mode" name="mode">
+                                    <option value="pdf_to_images">PDF ➔ JPEGs</option>
+                                    <option value="images_to_pdf">JPEGs/PNGs ➔ PDF</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pdf-input">Input Path (PDF file or Images Folder)</label>
+                                <input type="text" id="pdf-input" name="input_path" placeholder="Path to file or folder" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="pdf-output">Output Path (Destination Folder or PDF file path)</label>
+                                <input type="text" id="pdf-output" name="output_path" placeholder="Path to destination" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Execute PDF Task</button>
+                    </form>
+                </div>
+
+
+<div class="tool-panel" id="panel-thumbnail_sheet">
+<div class="tool-description-block">
+<p class="tool-description">Generate a video thumbnail sheet (contact sheet) containing screenshots at regular intervals along with media information.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Input</strong>: <code>tutorial.mp4</code> -&gt; Grid: <strong>4x4 (16 frames)</strong><br/><strong>Output</strong>: Produces <code>tutorial_thumbnails.jpg</code> displaying a storyboard overview.</p>
+</div>
+</div>
+<form class="tool-form" id="form-thumbnail_sheet">
+<div class="form-group">
+<label for="thumb-input">Video File Path</label>
+<input id="thumb-input" placeholder="e.g., /home/tarik/Videos/movie.mp4" required="" type="text"/>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="thumb-cols">Grid Columns</label>
+<input id="thumb-cols" max="10" min="2" type="number" value="4"/>
+</div>
+<div class="form-group">
+<label for="thumb-rows">Grid Rows</label>
+<input id="thumb-rows" max="10" min="2" type="number" value="4"/>
+</div>
+</div>
+<div class="form-group">
+<label for="thumb-output">Output JPEG Path</label>
+<input id="thumb-output" placeholder="e.g., /home/tarik/Videos/sheet.jpg" required="" type="text"/>
+</div>
+<button class="btn-run" type="submit">Generate Sheet</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-google_photos_combiner">
+<div class="tool-description-block">
+<p class="tool-description">Download and combine Google Takeout photos. Solves the split JSON metadata problem by parsing matching metadata sidecar files and writing them back into the photos' EXIF headers.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Input Directory</strong>: <code>/home/tarik/Takeout/Google Photos</code><br/><strong>Output</strong>: Merges scattered directory structures and updates file timestamps from JSON metadata.</p>
+</div>
+</div>
+<form class="tool-form" id="form-google_photos_combiner">
+<div class="form-row">
+<div class="form-group">
+<label for="gphotos-json">JSON Metadata Folder</label>
+<input id="gphotos-json" placeholder="e.g., /home/tarik/GooglePhotos/Takeout" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="gphotos-media">Media Files Folder</label>
+<input id="gphotos-media" placeholder="e.g., /home/tarik/GooglePhotos/Photos" required="" type="text"/>
+</div>
+</div>
+<button class="btn-run" type="submit">Restore Metadata</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-date_recognizer">
+<div class="tool-description-block">
+<p class="tool-description">Scan photo files, read internal EXIF creation dates, and organize them into structured folders chronologically or rename them.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Input</strong>: <code>/home/tarik/UnsortedPhotos</code> -&gt; Format: <code>YYYY-MM-DD_Filename.jpg</code><br/><strong>Output</strong>: Organizes files into <code>2026/06/</code> directory structure based on capture date.</p>
+</div>
+</div>
+<form class="tool-form" id="form-date_recognizer">
+<div class="form-group">
+<label for="recognizer-dir">Photos Directory Path</label>
+<input id="recognizer-dir" placeholder="e.g., /home/tarik/Pictures/Scanned" required="" type="text"/>
+</div>
+<button class="btn-run" type="submit">Reorganize Dates</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-snapchat_processor">
+<div class="tool-description-block">
+<p class="tool-description">Process Snapchat Takeout export data. Downloads and renames memories and chats, converting raw files into organized media libraries.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Input</strong>: <code>memories_history.json</code> -&gt; Select destination <code>/home/tarik/Snapchat</code><br/><strong>Output</strong>: Downloads all archived memories with correct upload dates as filenames.</p>
+</div>
+</div>
+<form class="tool-form" id="form-snapchat_processor">
+<div class="form-row">
+<div class="form-group">
+<label for="snap-media">Media Directory Path</label>
+<input id="snap-media" placeholder="e.g., /home/tarik/Snapchat/Memories" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="snap-html">Snapchat index.html File</label>
+<input id="snap-html" placeholder="e.g., /home/tarik/Snapchat/index.html" required="" type="text"/>
+</div>
+</div>
+<button class="btn-run" type="submit">Process Snapchat Data</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-metadata_swapper">
+<div class="tool-description-block">
+<p class="tool-description">Clean, copy, or swap EXIF/ID3 metadata between files. Useful for restoring lost photo capture dates or clearing tracking metadata.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Input</strong>: <code>edited_photo.jpg</code> (destination), <code>original_raw.nef</code> (source) -&gt; Select <strong>Copy Metadata</strong><br/><strong>Output</strong>: Re-injects original camera settings and dates into the edited photo.</p>
+</div>
+</div>
+<form class="tool-form" id="form-metadata_swapper">
+<div class="form-group">
+<label for="swap-dir">Directory Path</label>
+<input id="swap-dir" placeholder="e.g., /home/tarik/Pictures/Album" required="" type="text"/>
+</div>
+<button class="btn-run" type="submit">Swap Timestamps</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-duplicate_finder">
+<div class="tool-description-block">
+<p class="tool-description">Scan directory trees to identify duplicate files based on binary hash signatures (MD5/SHA256). Provides safe deletion options.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Path</strong>: <code>/home/tarik/Documents</code><br/><strong>Output</strong>: Lists identical files (even with different names) and generates a cleanup report.</p>
+</div>
+</div>
+<form class="tool-form" id="form-duplicate_finder">
+<div class="form-group">
+<label for="dup-dir">Directory Path</label>
+<input id="dup-dir" placeholder="e.g., /home/tarik/Downloads" required="" type="text"/>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="dup-min-size">Min File Size (KB)</label>
+<input id="dup-min-size" min="0" type="number" value="0"/>
+</div>
+<div class="form-group">
+<label for="dup-action">Redundancy Action</label>
+<select id="dup-action">
+<option value="log">Log Only (Dry Run)</option>
+<option value="delete">Delete duplicates (Keep original)</option>
+<option value="delete_backup">Delete duplicates (Create Manifest)</option>
+<option value="restore">Restore from Manifest</option>
+</select>
+</div>
+</div>
+<button class="btn-run" type="submit">Scan for Duplicates</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-directory_organizer">
+<div class="tool-description-block">
+<p class="tool-description">Tidy up cluttered directories by sorting files into subfolders based on file types and extensions (e.g., Documents, Images, Archives).</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Path</strong>: <code>/home/tarik/Downloads</code><br/><strong>Output</strong>: Moves <code>.zip</code> to <code>Archives/</code>, <code>.pdf</code> to <code>Documents/</code>, <code>.jpg</code> to <code>Images/</code> automatically.</p>
+</div>
+</div>
+<form class="tool-form" id="form-directory_organizer">
+<div class="form-group">
+<label for="org-dir">Directory to Organize</label>
+<input id="org-dir" placeholder="e.g., /home/tarik/Downloads" required="" type="text"/>
+</div>
+<button class="btn-run" type="submit">Organize Folder</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-bulk_renamer">
+<div class="tool-description-block">
+<p class="tool-description">Rename hundreds of files at once using patterns, search-and-replace, serialization, case modification, or regular expressions.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Pattern</strong>: <code>vacation_&lt;num&gt;</code> -&gt; Search: <code>IMG_</code> -&gt; Replace: <code>vacation_</code><br/><strong>Output</strong>: Renames <code>IMG_3421.jpg</code> to <code>vacation_001.jpg</code>.</p>
+</div>
+</div>
+<form class="tool-form" id="form-bulk_renamer">
+<div class="form-group">
+<label for="rename-dir">Directory Path</label>
+<input id="rename-dir" placeholder="e.g., /home/tarik/Documents/reports" required="" type="text"/>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="rename-search">Search String / Pattern</label>
+<input id="rename-search" placeholder="e.g., draft_2020_" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="rename-replace">Replace With</label>
+<input id="rename-replace" placeholder="e.g., final_" type="text"/>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="rename-regex">Use Regex Search</label>
+<select id="rename-regex">
+<option value="false">No (Literal String)</option>
+<option value="true">Yes (Regex)</option>
+</select>
+</div>
+<div class="form-group">
+<label for="rename-case">Change Text Casing</label>
+<select id="rename-case">
+<option value="none">Preserve Casing</option>
+<option value="lower">lower case</option>
+<option value="upper">UPPER CASE</option>
+<option value="title">Title Case</option>
+</select>
+</div>
+</div>
+<button class="btn-run" type="submit">Execute Renaming</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-secure_shredder">
+<div class="tool-description-block">
+<p class="tool-description" style="color: var(--color-red);">WARNING: Overwrites target files multiple times with random garbage data before deletion to prevent physical disk recovery.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example File</strong>: <code>/home/tarik/Documents/private.txt</code> -&gt; Runs <strong>3-pass Department of Defense overwrite</strong><br/><strong>Output</strong>: Shreds the file so it cannot be recovered by forensic software.</p>
+</div>
+</div>
+<form class="tool-form" id="form-secure_shredder">
+<div class="form-group">
+<label for="shred-path">File or Folder Path to Shred</label>
+<input id="shred-path" placeholder="e.g., /home/tarik/Documents/confidential.txt" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="shred-passes">Overwriting Passes</label>
+<input id="shred-passes" max="10" min="1" type="number" value="3"/>
+</div>
+<button class="btn-run" style="background: linear-gradient(135deg, var(--color-red), #ff6b6b); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);" type="submit">Securely Shred</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-archive_manager">
+<div class="tool-description-block">
+<p class="tool-description">Compress directories into zip, tar.gz, or tar.xz archives, or extract files from existing compressed files.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Input</strong>: <code>/home/tarik/Project</code> -&gt; Select <strong>Create ZIP</strong><br/><strong>Output</strong>: Creates a compact <code>Project.zip</code> file.</p>
+</div>
+</div>
+<form class="tool-form" id="form-archive_manager">
+<div class="form-group">
+<label for="arc-mode">Operation</label>
+<select id="arc-mode">
+<option value="extract">Extract Archive</option>
+<option value="create">Pack Folder to Archive</option>
+</select>
+</div>
+<div class="form-group">
+<label for="arc-input">Source File/Folder Path</label>
+<input id="arc-input" placeholder="e.g., /home/tarik/Downloads/archive.zip" required="" type="text"/>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="arc-format">Archive Format (if packing)</label>
+<select id="arc-format">
+<option value="zip">ZIP (.zip)</option>
+<option value="tar.gz">Gzip Tar (.tar.gz)</option>
+<option value="tar.xz">XZ Tar (.tar.xz)</option>
+</select>
+</div>
+<div class="form-group">
+<label for="arc-output">Destination Folder</label>
+<input id="arc-output" placeholder="Folder destination" required="" type="text"/>
+</div>
+</div>
+<button class="btn-run" type="submit">Run Archive Job</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-folder_analyzer">
+<div class="tool-description-block">
+<p class="tool-description">Analyze disk space usage in a directory. Produces a tree list of subdirectories sorted by file size to locate space leaks.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Path</strong>: <code>/home/tarik/</code> -&gt; Scan level: <strong>3 levels deep</strong><br/><strong>Output</strong>: Lists largest folders (e.g., <code>/home/tarik/.cache - 12.4 GB</code>) in descending order.</p>
+</div>
+</div>
+<form class="tool-form" id="form-folder_analyzer">
+<div class="form-group">
+<label for="size-dir">Directory Path</label>
+<input id="size-dir" placeholder="e.g., /home/tarik/Documents" required="" type="text"/>
+</div>
+<button class="btn-run" type="submit">Analyze Sizes</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-directory_bruteforcer">
+<div class="tool-description-block">
+<p class="tool-description">Perform directory and file path fuzzing on web servers to discover hidden assets, admin panels, or exposed backup archives.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Target</strong>: <code>http://localhost:8000</code> -&gt; Wordlist: <code>common_paths.txt</code><br/><strong>Output</strong>: Logs discovered pages like <code>200 OK - /admin</code>, <code>301 - /assets</code>.</p>
+</div>
+</div>
+<form class="tool-form" id="form-directory_bruteforcer">
+<div class="form-row">
+<div class="form-group">
+<label for="brute-mode">Scan Location Mode</label>
+<select id="brute-mode">
+<option value="end">End of URL (e.g., site.com/DIR)</option>
+<option value="middle">Middle of URL (e.g., site.com/DIR/page.html)</option>
+</select>
+</div>
+<div class="form-group">
+<label for="brute-base">Base URL</label>
+<input id="brute-base" placeholder="e.g., http://example.com" required="" type="text"/>
+</div>
+</div>
+<div class="form-row" id="brute-end-row" style="display: none;">
+<div class="form-group">
+<label for="brute-end">End URL Part</label>
+<input id="brute-end" placeholder="e.g., /index.php" type="text"/>
+</div>
+</div>
+<div class="form-group">
+<label for="brute-wordlist">Wordlist Text File Path</label>
+<input id="brute-wordlist" placeholder="e.g., /usr/share/wordlists/dirb/common.txt" required="" type="text"/>
+</div>
+<button class="btn-run" type="submit">Start Bruteforce</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-port_scanner">
+<div class="tool-description-block">
+<p class="tool-description">Scan a network host's ports to identify open sockets and determine running network services.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example IP</strong>: <code>192.168.1.1</code> -&gt; Ports: <code>1-1024</code> (Common System Ports)<br/><strong>Output</strong>: Reports open ports like <code>22 (SSH) - Open</code>, <code>80 (HTTP) - Open</code>.</p>
+</div>
+</div>
+<form class="tool-form" id="form-port_scanner">
+<div class="form-row">
+<div class="form-group">
+<label for="port-host">Host IP Address / Domain</label>
+<input id="port-host" required="" type="text" value="127.0.0.1"/>
+</div>
+<div class="form-group">
+<label for="port-range">Ports Range (e.g., 20-1000)</label>
+<input id="port-range" placeholder="e.g. 21-80 or 80,443" required="" type="text" value="20-1024"/>
+</div>
+</div>
+<button class="btn-run" type="submit">Scan Ports</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-network_diagnostics">
+<div class="tool-description-block">
+<p class="tool-description">Troubleshoot connection status, perform DNS resolutions over HTTPS (DoH), trace hops (Traceroute), and retrieve Geo-IP location info keylessly.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Target</strong>: <code>google.com</code> -&gt; Action: <strong>Geo-IP Lookup</strong><br/><strong>Output</strong>: Displays public IP ownership, ISP name, and coordinate locations.</p>
+</div>
+</div>
+<form class="tool-form" id="form-network_diagnostics">
+<div class="form-row">
+<div class="form-group">
+<label for="net-host">Target Domain / Address (Leave empty for Geo-IP self lookup)</label>
+<input id="net-host" placeholder="e.g., google.com or empty" type="text"/>
+</div>
+<div class="form-group">
+<label for="net-type">Operation Mode</label>
+<select id="net-type">
+<option value="ping">Ping Latency Test</option>
+<option value="dns">Cloudflare DNS DoH Lookup</option>
+<option value="geoip">Geo-IP Location lookup</option>
+</select>
+</div>
+</div>
+<button class="btn-run" type="submit">Run Network Check</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-system_monitor">
+<div class="tool-description-block">
+<p class="tool-description">Retrieve live machine resource metrics including CPU usage per core, physical RAM usage, disk IO, and network interfaces.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Output</strong>: Streams real-time updates like <strong>CPU: 24%, Memory: 6.2/16 GB, Disk Read: 12 KB/s</strong>.</p>
+</div>
+</div>
+<form class="tool-form" id="form-system_monitor">
+<div class="form-group">
+<label for="sys-interval">Sample Speed (Seconds)</label>
+<input id="sys-interval" max="10" min="1" type="number" value="2"/>
+</div>
+<button class="btn-run" type="submit">Stream Resources</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-credentials_safe">
+<div class="tool-description-block">
+<p class="tool-description">Securely store, retrieve, and manage your usernames, passwords, and private notes locally in an encrypted database.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Action</strong>: Add credentials entry -&gt; Key: <code>Spotify</code>, Value: <code>tarik_pass123</code><br/><strong>Output</strong>: Saves encrypted credentials using AES-256.</p>
+</div>
+</div>
+<form class="tool-form" id="form-credentials_safe">
+<div class="form-group">
+<label for="safe-action">Operation</label>
+<select id="safe-action">
+<option value="list">List Saved Entries (Decrypted)</option>
+<option value="add">Add New Entry</option>
+</select>
+</div>
+<div class="form-row" id="safe-add-row" style="display: none;">
+<div class="form-group">
+<label for="safe-key">Service Name</label>
+<input id="safe-key" placeholder="e.g., LastFM_API" type="text"/>
+</div>
+<div class="form-group">
+<label for="safe-value">API Key / Password</label>
+<input id="safe-value" placeholder="Secret string" type="password"/>
+</div>
+</div>
+<div class="form-group">
+<label for="safe-master">Master Secret Key (Used as AES Passphrase)</label>
+<input id="safe-master" placeholder="Enter key to decrypt/encrypt" required="" type="password"/>
+</div>
+<button class="btn-run" type="submit">Run Safe Task</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-hosts_editor">
+<div class="tool-description-block">
+<p class="tool-description">View, append, or modify DNS mappings in the system hosts file. Convenient for blocking trackers or setting up local development domains.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Entry</strong>: <code>127.0.0.1 dev.local</code> -&gt; Select <strong>Add Host</strong><br/><strong>Output</strong>: Maps <code>dev.local</code> to point to localhost in the host file.</p>
+</div>
+</div>
+<form class="tool-form" id="form-hosts_editor">
+<div class="form-row">
+<div class="form-group">
+<label for="hosts-action">Action</label>
+<select id="hosts-action">
+<option value="view">View Current Rules</option>
+<option value="add">Block Domain</option>
+</select>
+</div>
+<div class="form-group" id="hosts-domain-group" style="display: none;">
+<label for="hosts-domain">Domain to Block</label>
+<input id="hosts-domain" placeholder="e.g. facebook.com" type="text"/>
+</div>
+</div>
+<button class="btn-run" type="submit">Manage Hosts Rules</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-speed_tester">
+<div class="tool-description-block">
+<p class="tool-description">Measure internet download speed, upload speed, and round-trip ping latency using public speedtest servers.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Action</strong>: Run speedtest -&gt; Outputs <strong>Download: 250 Mbps, Upload: 45 Mbps, Ping: 12ms</strong>.</p>
+</div>
+</div>
+<form class="tool-form" id="form-speed_tester">
+<p style="color: var(--text-secondary); margin-bottom: 12px;">Tests download speed, upload speed, and ping times to nearest server.</p>
+<button class="btn-run" type="submit">Perform Speed Test</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-weather_station">
+<div class="tool-description-block">
+<p class="tool-description">Retrieve live meteorological reports, forecasts, windspeed, and weather conditions keylessly using the Open-Meteo API.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example City</strong>: <code>Munich</code> -&gt; Select unit <strong>Celsius</strong><br/><strong>Output</strong>: Displays temperature, humidity, and pressure forecasts for the next 3 days.</p>
+</div>
+</div>
+<form class="tool-form" id="form-weather_station">
+<div class="form-group">
+<label for="weather-city">City Name or Region (e.g. London, Paris)</label>
+<input id="weather-city" placeholder="e.g. Berlin" required="" type="text"/>
+</div>
+<button class="btn-run" type="submit">Get Weather Forecast</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-combination_generator">
+<div class="tool-description-block">
+<p class="tool-description">Generate all permutations or combinations of letters, numbers, or words. Extremely useful for list processing or backup key testing.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Input</strong>: Letters: <code>abc</code>, Length: <strong>3</strong><br/><strong>Output</strong>: Generates <code>abc, acb, bac, bca, cab, cba</code>.</p>
+</div>
+</div>
+<form class="tool-form" id="form-combination_generator">
+<div class="form-row">
+<div class="form-group">
+<label for="combo-length">Character Length</label>
+<input id="combo-length" max="10" min="1" required="" type="number" value="3"/>
+</div>
+<div class="form-group">
+<label for="combo-output">Output File (.txt)</label>
+<input id="combo-output" placeholder="e.g., /home/tarik/Dokumente/combos.txt" required="" type="text"/>
+</div>
+</div>
+<button class="btn-run" type="submit">Generate Combinations</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-code_formatter">
+<div class="tool-description-block">
+<p class="tool-description">Lint and beautify source code (Python, JavaScript, HTML, CSS, JSON) into industry-standard clean coding styles.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Input</strong>: Paste unformatted Python code -&gt; Click <strong>Format</strong><br/><strong>Output</strong>: Outputs PEP-8 compliant formatted Python code.</p>
+</div>
+</div>
+<form class="tool-form" id="form-code_formatter">
+<div class="form-row">
+<div class="form-group">
+<label for="fmt-lang">Document Type</label>
+<select id="fmt-lang">
+<option value="json">JSON</option>
+<option value="xml">XML / HTML</option>
+<option value="css">CSS</option>
+<option value="sql">SQL</option>
+</select>
+</div>
+<div class="form-group">
+<label for="fmt-indent">Indentation size</label>
+<input id="fmt-indent" max="8" min="2" type="number" value="4"/>
+</div>
+</div>
+<div class="form-group">
+<label for="fmt-input">Raw Text Content</label>
+<textarea id="fmt-input" placeholder="Paste unformatted code here..." required="" rows="8"></textarea>
+</div>
+<button class="btn-run" type="submit">Format Content</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-data_translator">
+<div class="tool-description-block">
+<p class="tool-description">Convert data files between structured CSV and JSON formats. Handles parsing errors and processes nested dictionaries.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Input</strong>: <code>/home/tarik/data.csv</code> -&gt; Select <strong>CSV to JSON</strong><br/><strong>Output</strong>: Writes parsed data to <code>/home/tarik/data.json</code>.</p>
+</div>
+</div>
+<form class="tool-form" id="form-data_translator">
+<div class="form-row">
+<div class="form-group">
+<label for="trans-direction">Translation Direction</label>
+<select id="trans-direction">
+<option value="csv_to_json">CSV ➔ JSON</option>
+<option value="json_to_csv">JSON ➔ CSV</option>
+</select>
+</div>
+<div class="form-group">
+<label for="trans-delimiter">CSV Delimiter (if CSV input)</label>
+<input id="trans-delimiter" maxlength="1" type="text" value=","/>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="trans-input">Input File Path</label>
+<input id="trans-input" placeholder="e.g., /home/tarik/data.csv" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="trans-output">Output File Path</label>
+<input id="trans-output" placeholder="e.g., /home/tarik/data.json" required="" type="text"/>
+</div>
+</div>
+<button class="btn-run" type="submit">Translate File</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-encoder_decoder">
+<div class="tool-description-block">
+<p class="tool-description">Encode or decode strings using Base64, URL-encoding, hexadecimal, or HTML entities. Perfect for developer debugging.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example String</strong>: <code>hello world</code> -&gt; Select <strong>Base64 Encode</strong><br/><strong>Output</strong>: Returns <code>aGVsbG8gd29ybGQ=</code>.</p>
+</div>
+</div>
+<form class="tool-form" id="form-encoder_decoder">
+<div class="form-row">
+<div class="form-group">
+<label for="enc-mode">Direction</label>
+<select id="enc-mode">
+<option value="encode">Encode</option>
+<option value="decode">Decode</option>
+</select>
+</div>
+<div class="form-group">
+<label for="enc-type">Scheme</label>
+<select id="enc-type">
+<option value="base64">Base64</option>
+<option value="url">URL Percent</option>
+<option value="hex">Hexadecimal</option>
+</select>
+</div>
+</div>
+<div class="form-group">
+<label for="enc-text">Input String</label>
+<textarea id="enc-text" placeholder="Enter text to process..." required="" rows="4"></textarea>
+</div>
+<button class="btn-run" type="submit">Process Text</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-regex_extractor">
+<div class="tool-description-block">
+<p class="tool-description">Extract matches from a text block based on a regular expression pattern. Displays match count, groups, and character indexes.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Text</strong>: <code>Order ID: #10243, User: tarik</code> -&gt; Pattern: <code>#\d+</code><br/><strong>Output</strong>: Extracts <code>#10243</code>.</p>
+</div>
+</div>
+<form class="tool-form" id="form-regex_extractor">
+<div class="form-group">
+<label for="rx-file">Target File Path</label>
+<input id="rx-file" placeholder="e.g., /var/log/syslog" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="rx-pattern">Regex Pattern (e.g., \b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b for emails)</label>
+<input id="rx-pattern" placeholder="Enter regular expression pattern..." required="" type="text"/>
+</div>
+<button class="btn-run" type="submit">Match File Lines</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-markdown_converter">
+<div class="tool-description-block">
+<p class="tool-description">Render Markdown files into structured HTML pages or preview Markdown formatting dynamically.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Input</strong>: <code>/home/tarik/readme.md</code> -&gt; Select <strong>Convert to HTML</strong><br/><strong>Output</strong>: Outputs compiled clean HTML content.</p>
+</div>
+</div>
+<form class="tool-form" id="form-markdown_converter">
+<div class="form-row">
+<div class="form-group">
+<label for="md-input">Input Markdown File</label>
+<input id="md-input" placeholder="e.g. /home/tarik/notes.md" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="md-output">Output HTML File</label>
+<input id="md-output" placeholder="e.g. /home/tarik/notes.html" required="" type="text"/>
+</div>
+</div>
+<button class="btn-run" type="submit">Convert Document</button>
+</form>
+</div>
+
+<div class="tool-panel" id="panel-qr_generator">
+<div class="tool-description-block">
+<p class="tool-description">Instantly compile text, links, or Wi-Fi configurations into high-contrast QR Codes and download them as PNG images.</p>
+<div class="tool-usage-example">
+<strong>💡 Example / Usage:</strong>
+<p><strong>Example Text</strong>: <code>https://github.com</code> -&gt; Image size: <strong>300x300</strong><br/><strong>Output</strong>: Generates and downloads <code>qr_code.png</code> to your machine.</p>
+</div>
+</div>
+<form class="tool-form" id="form-qr_generator">
+<div class="form-group">
+<label for="qr-text">QR Content (URL Link or Text string)</label>
+<input id="qr-text" placeholder="https://example.com" required="" type="text"/>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="qr-size">Pixel Dimensions (e.g. 300x300)</label>
+<input id="qr-size" max="1000" min="100" type="number" value="300"/>
+</div>
+<div class="form-group">
+<label for="qr-output">Output Destination File (.png)</label>
+<input id="qr-output" placeholder="e.g. /home/tarik/Pictures/qr_code.png" required="" type="text"/>
+</div>
+</div>
+<button class="btn-run" type="submit">Generate QR Code</button>
+</form>
+</div>
+
+<div class="monitor-container">
+<div class="monitor-header">
+<h3>Operation Progress &amp; Logs</h3>
+<div class="monitor-controls">
+<button class="btn-cancel" disabled="" id="btn-cancel-task">Stop Operation</button>
+<button class="btn-clear" id="btn-clear-console">Clear Logs</button>
+<button class="btn-clear" id="btn-download-logs" title="Download console log output">📥 Download Logs</button>
+<button class="btn-clear" id="btn-fullscreen-console" title="Toggle fullscreen console">🖥️ Fullscreen</button>
+</div>
+</div>
+
+<div class="progress-section">
+<div class="progress-bar-container">
+<div class="progress-bar" id="operation-progress-bar" style="width: 0%;"></div>
+</div>
+<span id="operation-progress-text">0%</span>
+</div>
+
+<div class="terminal-console" id="console-output">
+<div class="terminal-line system-line">[System] Welcome to Multi-tool. Select a tool above and configure parameters.</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+                <div class="tool-panel" id="panel-audio_trimmer">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Trim audio files (MP3/WAV) to exact start/end timestamps using FFmpeg.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Input Audio</strong>: <code>/home/tarik/Music/song.mp3</code><br><strong>Start Time</strong>: <code>00:00:10</code>, <strong>End Time</strong>: <code>00:00:45</code><br><strong>Output</strong>: Outputs the trimmed audio segment keylessly.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-audio_trimmer">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="audio_trimmer-audio_path">Audio File Path</label>
+                            <input type="text" id="audio_trimmer-audio_path" name="audio_path" placeholder="e.g., /home/tarik/Music/song.mp3" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="audio_trimmer-output_path">Output File Path</label>
+                            <input type="text" id="audio_trimmer-output_path" name="output_path" placeholder="e.g., /home/tarik/Music/song_trimmed.mp3" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="audio_trimmer-start_time">Start Time (HH:MM:SS or seconds)</label>
+                            <input type="text" id="audio_trimmer-start_time" name="start_time" placeholder="e.g., 00:00:00" value="00:00:00" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="audio_trimmer-end_time">End Time (HH:MM:SS or seconds, optional)</label>
+                            <input type="text" id="audio_trimmer-end_time" name="end_time" placeholder="e.g., 00:01:30">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Trim Audio</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-bpm_detector">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Estimates Audio BPM and musical key signature using audio sampling (FFmpeg + Numpy) or music analysis.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Audio Path</strong>: <code>/home/tarik/Music/track.mp3</code><br><strong>Output</strong>: Computes and returns estimated BPM and Key signature.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-bpm_detector">
+                        <div class="form-group">
+                            <label for="bpm_detector-audio_path">Audio File Path</label>
+                            <input type="text" id="bpm_detector-audio_path" name="audio_path" placeholder="e.g., /home/tarik/Music/track.mp3" required>
+                        </div>
+                        <button type="submit" class="btn-run">Detect BPM & Key</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-id3_cleaner">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Strips all ID3 metadata, tag frames, comments, and embedded artwork from MP3 files for privacy.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>MP3 File</strong>: <code>/home/tarik/Downloads/leak.mp3</code><br><strong>Output</strong>: Completely strips metadata to produce a clean, anonymous MP3 file.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-id3_cleaner">
+                        <div class="form-group">
+                            <label for="id3_cleaner-mp3_path">MP3 File Path</label>
+                            <input type="text" id="id3_cleaner-mp3_path" name="mp3_path" placeholder="e.g., /home/tarik/Music/song.mp3" required>
+                        </div>
+                        <button type="submit" class="btn-run">Strip Tags</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-text_to_speech">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Converts text to a spoken MP3 file using Google's public keyless TTS stream API.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Text</strong>: <code>Welcome to Multi-tool.</code><br><strong>Language</strong>: <code>en</code><br><strong>Output</strong>: Downloads the spoken voice output to your designated path.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-text_to_speech">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="text_to_speech-lang">Language Code</label>
+                            <input type="text" id="text_to_speech-lang" name="lang" placeholder="e.g., en, fr, de, es" value="en" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="text_to_speech-output_path">Output MP3 File Path</label>
+                            <input type="text" id="text_to_speech-output_path" name="output_path" placeholder="e.g., /home/tarik/Music/welcome.mp3" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="text_to_speech-text">Text to Speak</label>
+                            <textarea id="text_to_speech-text" name="text" placeholder="Type sentences to narrate here..." required rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="btn-run">Generate Speech</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-video_stabilizer">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Stabilizes shaky video files using FFmpeg's optimized vid.stab two-pass filters.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Input Video</strong>: <code>/home/tarik/Videos/gopro_raw.mp4</code><br><strong>Output</strong>: Stabilized, smooth-motion video saved to destination.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-video_stabilizer">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="video_stabilizer-video_path">Video File Path</label>
+                            <input type="text" id="video_stabilizer-video_path" name="video_path" placeholder="e.g., /home/tarik/Videos/shaky.mp4" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="video_stabilizer-output_path">Output Video Path</label>
+                            <input type="text" id="video_stabilizer-output_path" name="output_path" placeholder="e.g., /home/tarik/Videos/stabilized.mp4" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Stabilize Video</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-image_bg_remover">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Removes image backgrounds using a public keyless background remover API or local color threshold filters.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Image Path</strong>: <code>/home/tarik/Pictures/product.jpg</code><br><strong>Output</strong>: Generates a transparent PNG image.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-image_bg_remover">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="image_bg_remover-image_path">Image File Path</label>
+                            <input type="text" id="image_bg_remover-image_path" name="image_path" placeholder="e.g., /home/tarik/Pictures/photo.jpg" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="image_bg_remover-output_path">Output PNG Path</label>
+                            <input type="text" id="image_bg_remover-output_path" name="output_path" placeholder="e.g., /home/tarik/Pictures/photo_nobg.png" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="image_bg_remover-tolerance">Color Tolerance (1-100)</label>
+                            <input type="number" id="image_bg_remover-tolerance" name="tolerance" placeholder="15" value="15" required>
+                        </div>
+                        <button type="submit" class="btn-run">Remove Background</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-video_to_audio">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Extracts raw audio streams from video files (MP4/MKV) into MP3 or WAV formats.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Video Path</strong>: <code>/home/tarik/Videos/lecture.mp4</code> -> Select <strong>mp3</strong><br><strong>Output</strong>: Outputs <code>lecture_audio.mp3</code>.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-video_to_audio">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="video_to_audio-video_path">Video File Path</label>
+                            <input type="text" id="video_to_audio-video_path" name="video_path" placeholder="e.g., /home/tarik/Videos/movie.mkv" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="video_to_audio-output_path">Output Audio Path</label>
+                            <input type="text" id="video_to_audio-output_path" name="output_path" placeholder="e.g., /home/tarik/Videos/audio.mp3" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="video_to_audio-format_type">Audio Format</label>
+                            <select id="video_to_audio-format_type" name="format_type" required>
+                                    <option value="mp3" selected>mp3</option>
+                                    <option value="wav">wav</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-run">Extract Audio</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-gif_to_mp4">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Converts heavy animated GIFs into modern, highly compressed MP4 videos.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>GIF Path</strong>: <code>/home/tarik/Pictures/meme.gif</code><br><strong>Output</strong>: Highly compressed <code>meme.mp4</code> suitable for web rendering.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-gif_to_mp4">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="gif_to_mp4-gif_path">GIF File Path</label>
+                            <input type="text" id="gif_to_mp4-gif_path" name="gif_path" placeholder="e.g., /home/tarik/Pictures/animation.gif" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="gif_to_mp4-output_path">Output MP4 Path</label>
+                            <input type="text" id="gif_to_mp4-output_path" name="output_path" placeholder="e.g., /home/tarik/Pictures/animation.mp4" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Convert to MP4</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-pdf_to_images">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Extracts all pages of a PDF document as high-resolution individual PNG/JPG images.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>PDF Path</strong>: <code>/home/tarik/Documents/slides.pdf</code><br><strong>Output</strong>: Saves pages as <code>page_001.png</code>, <code>page_002.png</code> inside the target directory.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-pdf_to_images">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="pdf_to_images-pdf_path">PDF File Path</label>
+                            <input type="text" id="pdf_to_images-pdf_path" name="pdf_path" placeholder="e.g., /home/tarik/Documents/report.pdf" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="pdf_to_images-output_dir">Output Folder Path</label>
+                            <input type="text" id="pdf_to_images-output_dir" name="output_dir" placeholder="e.g., /home/tarik/Documents/pages" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Extract Pages</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-color_palette_extractor">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Extracts dominant hex color codes from images using pixel analysis and k-means clustering.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Image Path</strong>: <code>/home/tarik/Pictures/sunset.jpg</code><br><strong>Colors</strong>: <code>5</code><br><strong>Output</strong>: Returns dominant hex values (e.g. #FF5733, #C70039).</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-color_palette_extractor">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="color_palette_extractor-image_path">Image File Path</label>
+                            <input type="text" id="color_palette_extractor-image_path" name="image_path" placeholder="e.g., /home/tarik/Pictures/scene.jpg" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="color_palette_extractor-num_colors">Number of Colors</label>
+                            <input type="number" id="color_palette_extractor-num_colors" name="num_colors" placeholder="5" value="5" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Extract Colors</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-image_exif_viewer">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Extracts and displays complete EXIF metadata including camera settings, capture date, and GPS location coordinates.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Image Path</strong>: <code>/home/tarik/Pictures/travel.jpg</code><br><strong>Output</strong>: Displays exposure time, ISO, focal length, and camera brand details.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-image_exif_viewer">
+                        <div class="form-group">
+                            <label for="image_exif_viewer-image_path">Image File Path</label>
+                            <input type="text" id="image_exif_viewer-image_path" name="image_path" placeholder="e.g., /home/tarik/Pictures/photo.jpg" required>
+                        </div>
+                        <button type="submit" class="btn-run">View EXIF</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-video_rotator">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Rotates video files by 90/180/270 degrees or performs horizontal/vertical flips using FFmpeg.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Video Path</strong>: <code>/home/tarik/Videos/mobile_portrait.mp4</code> -> Select <strong>90</strong><br><strong>Output</strong>: Rotated video file saved to the destination path.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-video_rotator">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="video_rotator-video_path">Video File Path</label>
+                            <input type="text" id="video_rotator-video_path" name="video_path" placeholder="e.g., /home/tarik/Videos/raw.mp4" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="video_rotator-output_path">Output Video Path</label>
+                            <input type="text" id="video_rotator-output_path" name="output_path" placeholder="e.g., /home/tarik/Videos/rotated.mp4" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="video_rotator-angle">Rotation / Flip Mode</label>
+                            <select id="video_rotator-angle" name="angle" required>
+                                    <option value="90" selected>90</option>
+                                    <option value="180">180</option>
+                                    <option value="270">270</option>
+                                    <option value="hflip">hflip</option>
+                                    <option value="vflip">vflip</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-run">Rotate Video</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-hash_generator">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Calculates MD5, SHA-1, SHA-256, and SHA-512 hashes for any local file to check integrity.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>File Path</strong>: <code>/home/tarik/Downloads/ubuntu.iso</code><br><strong>Output</strong>: Generates standard checksum hash strings.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-hash_generator">
+                        <div class="form-group">
+                            <label for="hash_generator-file_path">File Path</label>
+                            <input type="text" id="hash_generator-file_path" name="file_path" placeholder="e.g., /home/tarik/Downloads/archive.zip" required>
+                        </div>
+                        <button type="submit" class="btn-run">Calculate Hashes</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-file_encrypter">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Password-protects files using military-grade AES-256-CBC encryption and decryption.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>File Path</strong>: <code>notes.txt</code> -> Select <strong>encrypt</strong> and enter a password.<br><strong>Output</strong>: Creates <code>notes.txt.enc</code>.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-file_encrypter">
+                        <div class="form-group">
+                            <label for="file_encrypter-file_path">File Path</label>
+                            <input type="text" id="file_encrypter-file_path" name="file_path" placeholder="e.g., /home/tarik/Documents/private.txt" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="file_encrypter-mode">Cryptographic Mode</label>
+                            <select id="file_encrypter-mode" name="mode" required>
+                                    <option value="encrypt" selected>encrypt</option>
+                                    <option value="decrypt">decrypt</option>
+                            </select>
+                            </div>
+                            <div class="form-group">
+                            <label for="file_encrypter-password">Cryptographic Password</label>
+                            <input type="password" id="file_encrypter-password" name="password" placeholder="Enter key/password..." required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Process File</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-directory_tree">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Generates a clean markdown or ASCII folder structure tree layout of any directory.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Directory Path</strong>: <code>/home/tarik/Dokumente/python projects</code><br><strong>Output</strong>: Outputs a printable layout block of files and subfolders.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-directory_tree">
+                        <div class="form-group">
+                            <label for="directory_tree-dir_path">Directory Path</label>
+                            <input type="text" id="directory_tree-dir_path" name="dir_path" placeholder="e.g., /home/tarik/Dokumente/project" required>
+                        </div>
+                        <button type="submit" class="btn-run">Generate Tree</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-broken_symlinks">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Identifies dangling or broken symbolic links in a directory and cleans them up.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Directory Path</strong>: <code>/home/tarik/bin</code><br><strong>Delete Links</strong>: <code>true</code><br><strong>Output</strong>: Deletes links pointing to invalid/deleted files.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-broken_symlinks">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="broken_symlinks-dir_path">Directory Path</label>
+                            <input type="text" id="broken_symlinks-dir_path" name="dir_path" placeholder="e.g., /home/tarik/bin" required>
+                            </div>
+                            <div class="form-group">
+                            <div class="checkbox-group-wrapper" style="display: flex; align-items: center; gap: 8px; margin-top: 24px;">
+                                <input type="checkbox" id="broken_symlinks-delete_links" name="delete_links" style="width: auto; margin: 0;">
+                                <label for="broken_symlinks-delete_links" style="margin: 0; cursor: pointer;">Delete broken symlinks automatically</label>
+                            </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Scan Symlinks</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-empty_folders">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Recursively scans a directory for empty folders and subdirectories and prunes them.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Directory Path</strong>: <code>/home/tarik/Downloads</code><br><strong>Delete Folders</strong>: <code>true</code><br><strong>Output</strong>: Safely clears empty subfolders recursively.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-empty_folders">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="empty_folders-dir_path">Directory Path</label>
+                            <input type="text" id="empty_folders-dir_path" name="dir_path" placeholder="e.g., /home/tarik/Downloads" required>
+                            </div>
+                            <div class="form-group">
+                            <div class="checkbox-group-wrapper" style="display: flex; align-items: center; gap: 8px; margin-top: 24px;">
+                                <input type="checkbox" id="empty_folders-delete_folders" name="delete_folders" style="width: auto; margin: 0;">
+                                <label for="empty_folders-delete_folders" style="margin: 0; cursor: pointer;">Delete empty folders automatically</label>
+                            </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Scan Folders</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-file_splitter">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Splits large files into small chunks of specified MB, or joins part files back together.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Source File Path</strong>: <code>large_file.zip</code> -> Select <strong>split</strong>, chunk size <strong>10MB</strong><br><strong>Output</strong>: Generates <code>large_file.zip.part01</code>, etc.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-file_splitter">
+                        <div class="form-group">
+                            <label for="file_splitter-file_path">Source File Path (or part01 path to merge)</label>
+                            <input type="text" id="file_splitter-file_path" name="file_path" placeholder="e.g., /home/tarik/Downloads/large.iso" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="file_splitter-mode">Operation Mode</label>
+                            <select id="file_splitter-mode" name="mode" required>
+                                    <option value="split" selected>split</option>
+                                    <option value="merge">merge</option>
+                            </select>
+                            </div>
+                            <div class="form-group">
+                            <label for="file_splitter-chunk_size_mb">Chunk Size Limit (MB)</label>
+                            <input type="number" id="file_splitter-chunk_size_mb" name="chunk_size_mb" placeholder="10" value="10" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Process File</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-log_analyzer">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Analyzes access log files (Nginx, Apache) to summarize requests, client IPs, response codes, and errors.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Log Path</strong>: <code>/var/log/nginx/access.log</code><br><strong>Output</strong>: Breakdown of status codes (2xx, 4xx, 5xx) and request traffic charts.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-log_analyzer">
+                        <div class="form-group">
+                            <label for="log_analyzer-log_path">Log File Path</label>
+                            <input type="text" id="log_analyzer-log_path" name="log_path" placeholder="e.g., /var/log/nginx/access.log" required>
+                        </div>
+                        <button type="submit" class="btn-run">Analyze Logs</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-temp_cleaner">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Scan and safely delete OS temp files, log piles, and app caches to free up disk storage.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Output</strong>: Safely deletes system-level temporary files and reports total freed bytes.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-temp_cleaner">
+
+                        <button type="submit" class="btn-run">Clean Temp Files</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-s3_downloader">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Downloads files and object structures recursively from any public Amazon S3 bucket keylessly.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>S3 Bucket Name</strong>: <code>pub-images-bucket</code><br><strong>Download Folder</strong>: <code>/home/tarik/Downloads/s3_export</code><br><strong>Output</strong>: Downloads the full bucket structure.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-s3_downloader">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="s3_downloader-bucket_name">S3 Bucket Name</label>
+                            <input type="text" id="s3_downloader-bucket_name" name="bucket_name" placeholder="e.g., pub-dataset" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="s3_downloader-download_dir">Download Folder Path</label>
+                            <input type="text" id="s3_downloader-download_dir" name="download_dir" placeholder="e.g., /home/tarik/Downloads/s3_sync" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Start Download</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-web_scraper">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Extracts headers, paragraph blocks, external links, and media URLs from any public webpage.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Webpage URL</strong>: <code>https://news.ycombinator.com</code><br><strong>Output</strong>: Scrapes, parses tags using BeautifulSoup, and lists anchor references.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-web_scraper">
+                        <div class="form-group">
+                            <label for="web_scraper-url">Webpage URL</label>
+                            <input type="text" id="web_scraper-url" name="url" placeholder="https://example.com/blog" required>
+                        </div>
+                        <button type="submit" class="btn-run">Scrape Page</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-github_repo_backup">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Downloads the latest master/main branch zip archive of a public GitHub repository keylessly.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>GitHub Repo URL</strong>: <code>https://github.com/django/django</code><br><strong>Destination Folder</strong>: <code>/home/tarik/Backups</code><br><strong>Output</strong>: Downloads the codebase as a zip package.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-github_repo_backup">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="github_repo_backup-repo_url">GitHub Repo URL</label>
+                            <input type="text" id="github_repo_backup-repo_url" name="repo_url" placeholder="https://github.com/username/repo" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="github_repo_backup-dest_dir">Destination Folder</label>
+                            <input type="text" id="github_repo_backup-dest_dir" name="dest_dir" placeholder="e.g., /home/tarik/Backups" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Backup Repo</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-rss_feed_reader">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Parses public RSS XML feeds to list recent articles, publication dates, summaries, and links.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>RSS Feed URL</strong>: <code>https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml</code><br><strong>Output</strong>: Lists the latest headlines and articles.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-rss_feed_reader">
+                        <div class="form-group">
+                            <label for="rss_feed_reader-feed_url">RSS Feed URL</label>
+                            <input type="text" id="rss_feed_reader-feed_url" name="feed_url" placeholder="e.g., https://hnrss.org/newest" required>
+                        </div>
+                        <button type="submit" class="btn-run">Read Feed</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-gdrive_link_converter">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Converts web sharing links from Google Drive into direct download links for shell scripts or utilities.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Google Drive Sharing Link</strong>: <code>https://drive.google.com/file/d/1A2B3C.../view?usp=sharing</code><br><strong>Output</strong>: Returns the direct API download endpoint.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-gdrive_link_converter">
+                        <div class="form-group">
+                            <label for="gdrive_link_converter-share_url">Google Drive Sharing Link</label>
+                            <input type="text" id="gdrive_link_converter-share_url" name="share_url" placeholder="https://drive.google.com/file/d/.../view" required>
+                        </div>
+                        <button type="submit" class="btn-run">Convert Link</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-dns_propagation">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Checks DNS records (A, AAAA, MX, TXT, CNAME, NS) across global public resolvers (Cloudflare, Google, OpenDNS).</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Domain Name</strong>: <code>google.com</code> -> Select <strong>A</strong><br><strong>Output</strong>: Compares resolved IPs from Cloudflare, Google, and OpenDNS.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-dns_propagation">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="dns_propagation-domain">Domain Name</label>
+                            <input type="text" id="dns_propagation-domain" name="domain" placeholder="e.g., example.com" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="dns_propagation-record_type">DNS Record Type</label>
+                            <select id="dns_propagation-record_type" name="record_type" required>
+                                    <option value="A" selected>A</option>
+                                    <option value="AAAA">AAAA</option>
+                                    <option value="MX">MX</option>
+                                    <option value="TXT">TXT</option>
+                                    <option value="CNAME">CNAME</option>
+                                    <option value="NS">NS</option>
+                            </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Check DNS</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-whois_lookup">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Queries registry details, expiry dates, and registrar information for domain names using keyless public RDAP APIs.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Domain Name</strong>: <code>github.com</code><br><strong>Output</strong>: Displays registration dates, servers, and registrar contact data.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-whois_lookup">
+                        <div class="form-group">
+                            <label for="whois_lookup-domain">Domain Name</label>
+                            <input type="text" id="whois_lookup-domain" name="domain" placeholder="e.g., github.com" required>
+                        </div>
+                        <button type="submit" class="btn-run">Lookup Domain</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-http_header_checker">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Inspects HTTP response headers, redirect chains, status codes, and cookies for any website URL.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>URL to Check</strong>: <code>https://google.com</code><br><strong>Output</strong>: Lists the headers, redirects, security headers (CSP, HSTS), and status hops.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-http_header_checker">
+                        <div class="form-group">
+                            <label for="http_header_checker-url">URL to Check</label>
+                            <input type="text" id="http_header_checker-url" name="url" placeholder="https://example.com" required>
+                        </div>
+                        <button type="submit" class="btn-run">Inspect Headers</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-ssl_expiry_checker">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Warns about SSL/TLS certificate expiration date, issuer details, days remaining, and domain matches.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Host Name</strong>: <code>google.com</code><br><strong>Port</strong>: <code>443</code><br><strong>Output</strong>: Establishes a TLS connection to check SSL validity.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-ssl_expiry_checker">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="ssl_expiry_checker-host">Hostname / IP</label>
+                            <input type="text" id="ssl_expiry_checker-host" name="host" placeholder="e.g., example.com" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="ssl_expiry_checker-port">Port Number</label>
+                            <input type="number" id="ssl_expiry_checker-port" name="port" placeholder="443" value="443" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Check Expiry</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-subnet_calculator">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Computes network subnet masks, broadcast IPs, host IP ranges, and total hosts from an IP and CIDR prefix.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>IP Address</strong>: <code>192.168.1.1</code><br><strong>CIDR Mask</strong>: <code>24</code><br><strong>Output</strong>: Computes broadcast (192.168.1.255) and host ranges.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-subnet_calculator">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="subnet_calculator-ip">IP Address</label>
+                            <input type="text" id="subnet_calculator-ip" name="ip" placeholder="e.g., 192.168.1.1" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="subnet_calculator-cidr">CIDR Mask (1-32)</label>
+                            <input type="number" id="subnet_calculator-cidr" name="cidr" placeholder="24" value="24" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Calculate Subnet</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-mac_vendor_lookup">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Looks up the hardware vendor and manufacturer of an ethernet or wireless MAC address using public keyless APIs.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>MAC Address</strong>: <code>00:1A:2B:3C:4D:5E</code><br><strong>Output</strong>: Resolves vendor (e.g. Apple, Cisco, Intel).</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-mac_vendor_lookup">
+                        <div class="form-group">
+                            <label for="mac_vendor_lookup-mac">MAC Address</label>
+                            <input type="text" id="mac_vendor_lookup-mac" name="mac" placeholder="e.g., 00:1A:2B:3C:4D:5E" required>
+                        </div>
+                        <button type="submit" class="btn-run">Lookup Vendor</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-user_agent_parser">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Parses browser User-Agent headers to resolve the operating system, web browser version, engine, and device types.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>User-Agent String</strong>: <code>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36...</code><br><strong>Output</strong>: Details OS (Windows 10) and Browser (Chrome).</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-user_agent_parser">
+                        <div class="form-group">
+                            <label for="user_agent_parser-user_agent">User-Agent String</label>
+                            <input type="text" id="user_agent_parser-user_agent" name="user_agent" placeholder="Paste user-agent header here..." required>
+                        </div>
+                        <button type="submit" class="btn-run">Parse Agent</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-url_shortener">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Shortens long URLs using keyless TinyURL redirect APIs, or expands shortened links to trace their actual landing page.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Operation</strong>: <code>shorten</code><br><strong>Target URL</strong>: <code>https://www.google.com/search?q=multi-tool+api</code><br><strong>Output</strong>: Returns a tinyurl link.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-url_shortener">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="url_shortener-url">Target URL</label>
+                            <input type="text" id="url_shortener-url" name="url" placeholder="e.g., https://very-long-url.com/path" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="url_shortener-action">Operation Mode</label>
+                            <select id="url_shortener-action" name="action" required>
+                                    <option value="shorten" selected>shorten</option>
+                                    <option value="expand">expand</option>
+                            </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Process URL</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-ping_sweeper">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Scans local network ranges using fast asynchronous ICMP ping packets to discover active device IPs.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Subnet Range</strong>: <code>192.168.1.0/24</code><br><strong>Output</strong>: Lists online host IPs and response latency.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-ping_sweeper">
+                        <div class="form-group">
+                            <label for="ping_sweeper-subnet">Subnet (CIDR format)</label>
+                            <input type="text" id="ping_sweeper-subnet" name="subnet" placeholder="e.g., 192.168.1.0/24" required>
+                        </div>
+                        <button type="submit" class="btn-run">Scan Subnet</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-cpu_stress">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Stresses the system CPU cores using high-frequency mathematical operations to monitor thermals and throttle status.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Cores to Stress</strong>: <code>4</code><br><strong>Duration</strong>: <code>30</code> seconds<br><strong>Output</strong>: Safely runs workload threads and reports completion status.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-cpu_stress">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="cpu_stress-cores">Cores to Stress</label>
+                            <input type="number" id="cpu_stress-cores" name="cores" placeholder="2" value="2" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="cpu_stress-duration">Duration (Seconds)</label>
+                            <input type="number" id="cpu_stress-duration" name="duration" placeholder="30" value="30" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Stress CPU</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-disk_benchmark">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Measures read and write performance throughput of local storage drives using buffered write streams.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Test Size (MB)</strong>: <code>100</code><br><strong>Output</strong>: Computes read/write speeds in MB/s.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-disk_benchmark">
+                        <div class="form-group">
+                            <label for="disk_benchmark-size_mb">Test File Size (MB)</label>
+                            <input type="number" id="disk_benchmark-size_mb" name="size_mb" placeholder="100" value="100" required>
+                        </div>
+                        <button type="submit" class="btn-run">Run Benchmark</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-wifi_networks">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Scans local wireless cards and interfaces to list nearby Wi-Fi network SSIDs, signal decibels, and security.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Output</strong>: Lists reachable access points and security structures.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-wifi_networks">
+
+                        <button type="submit" class="btn-run">Scan Wi-Fi</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-process_killer">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Scans OS processes, displays heavy memory/CPU applications, and terminates processes using selected PIDs.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Action</strong>: <code>list</code><br><strong>PID to Kill</strong>: (leave blank)<br><strong>Output</strong>: Lists current process table.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-process_killer">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="process_killer-action">Action Mode</label>
+                            <select id="process_killer-action" name="action" required>
+                                    <option value="list" selected>list</option>
+                                    <option value="kill">kill</option>
+                            </select>
+                            </div>
+                            <div class="form-group">
+                            <label for="process_killer-pid">PID to Kill (only for 'kill' mode)</label>
+                            <input type="number" id="process_killer-pid" name="pid" placeholder="e.g., 12345">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Process Task</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-cron_parser">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Parses complex unix cron expressions (e.g. */5 * * * *) and explains them in friendly plain English sentences.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Cron Expression</strong>: <code>0 12 * * 1-5</code><br><strong>Output</strong>: Explains: 'Runs at 12:00 PM, Monday through Friday'.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-cron_parser">
+                        <div class="form-group">
+                            <label for="cron_parser-cron">Cron Expression</label>
+                            <input type="text" id="cron_parser-cron" name="cron" placeholder="e.g., */5 * * * *" value="*/5 * * * *" required>
+                        </div>
+                        <button type="submit" class="btn-run">Explain Cron</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-uuid_generator">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Generates Version 1 or Version 4 Universally Unique Identifiers (UUIDs) in bulk quantities.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Quantity</strong>: <code>5</code><br><strong>Version</strong>: <code>4</code><br><strong>Output</strong>: Generates random 128-bit hexadecimal keys.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-uuid_generator">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="uuid_generator-count">Quantity to Generate</label>
+                            <input type="number" id="uuid_generator-count" name="count" placeholder="5" value="5" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="uuid_generator-version">UUID Version</label>
+                            <select id="uuid_generator-version" name="version" required>
+                                    <option value="1">1</option>
+                                    <option value="4" selected>4</option>
+                            </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Generate UUIDs</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-json_minifier">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Formats, beautifies, validates, or minifies JSON payload structures with error highlights.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Action</strong>: <code>format</code><br><strong>Payload</strong>: <code>{"a":1,"b":2}</code><br><strong>Output</strong>: Beautified JSON blocks.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-json_minifier">
+                        <div class="form-group">
+                            <label for="json_minifier-action">Format Mode</label>
+                            <select id="json_minifier-action" name="action" required>
+                                    <option value="format" selected>format</option>
+                                    <option value="minify">minify</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="json_minifier-raw_json">JSON Payload</label>
+                            <textarea id="json_minifier-raw_json" name="raw_json" placeholder="Paste JSON here..." required rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="btn-run">Process JSON</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-sql_formatter">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Beautifies and formats raw SQL queries (SELECT, INSERT, JOIN) with uppercase keywords and clean indents.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>SQL Query</strong>: <code>select * from users join posts on users.id=posts.user_id;</code><br><strong>Output</strong>: Formatted SQL block.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-sql_formatter">
+                        <div class="form-group">
+                            <label for="sql_formatter-sql">SQL Query</label>
+                            <textarea id="sql_formatter-sql" name="sql" placeholder="Paste SQL query here..." required rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="btn-run">Format SQL</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-xml_to_json">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Parses XML tags and structures and converts them into nested structured JSON records.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>XML Code</strong>: <code>&lt;note&gt;&lt;to&gt;Tarik&lt;/to&gt;&lt;/note&gt;</code><br><strong>Output</strong>: <code>{ "note": { "to": "Tarik" } }</code>.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-xml_to_json">
+                        <div class="form-group">
+                            <label for="xml_to_json-xml">XML Code</label>
+                            <textarea id="xml_to_json-xml" name="xml" placeholder="Paste XML code here..." required rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="btn-run">Convert XML</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-diff_checker">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Compares two blocks of text side-by-side highlighting deleted, added, or modified lines.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Text 1</strong>: <code>hello world</code><br><strong>Text 2</strong>: <code>hello python world</code><br><strong>Output</strong>: Highlights line changes.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-diff_checker">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="diff_checker-text1">Original Text (Block 1)</label>
+                            <textarea id="diff_checker-text1" name="text1" placeholder="Paste original text here..." required rows="4"></textarea>
+                            </div>
+                            <div class="form-group">
+                            <label for="diff_checker-text2">Modified Text (Block 2)</label>
+                            <textarea id="diff_checker-text2" name="text2" placeholder="Paste modified text here..." required rows="4"></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Compare Text</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-word_counter">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Calculates detailed text metrics: word counts, unique counts, lines, syllables, and estimated reading speed time.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Text Input</strong>: Paste an essay or paragraph.<br><strong>Output</strong>: Displays counts and statistics.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-word_counter">
+                        <div class="form-group">
+                            <label for="word_counter-text">Text Input</label>
+                            <textarea id="word_counter-text" name="text" placeholder="Paste text or article paragraphs here..." required rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="btn-run">Count Words</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-ip_validator">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Validates whether a string matches a standard IPv4, IPv6, or CIDR block range, checking network types.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>IP Address / CIDR</strong>: <code>192.168.1.0/24</code><br><strong>Output</strong>: Confirms valid private range format.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-ip_validator">
+                        <div class="form-group">
+                            <label for="ip_validator-ip">IP Address / CIDR</label>
+                            <input type="text" id="ip_validator-ip" name="ip" placeholder="e.g., 192.168.1.1 or 2001:db8::/64" required>
+                        </div>
+                        <button type="submit" class="btn-run">Validate IP</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-markdown_to_pdf">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Compiles Markdown (.md) documents into clean, styled PDFs with syntax highlighting templates.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Markdown File</strong>: <code>/home/tarik/Documents/README.md</code><br><strong>Output PDF</strong>: <code>/home/tarik/Documents/README.pdf</code>.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-markdown_to_pdf">
+                        <div class="form-row">
+                            <div class="form-group">
+                            <label for="markdown_to_pdf-markdown_path">Markdown File Path</label>
+                            <input type="text" id="markdown_to_pdf-markdown_path" name="markdown_path" placeholder="e.g., /home/tarik/Documents/README.md" required>
+                            </div>
+                            <div class="form-group">
+                            <label for="markdown_to_pdf-output_pdf">Output PDF Path</label>
+                            <input type="text" id="markdown_to_pdf-output_pdf" name="output_pdf" placeholder="e.g., /home/tarik/Documents/README.pdf" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-run">Compile PDF</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-password_strength">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Estimates password strength complexity, bit entropy, and brute-force crack times against common pattern dictionary lists.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Password</strong>: <code>P@ssw0rd123!</code><br><strong>Output</strong>: Evaluates entropy and lists security warning flags.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-password_strength">
+                        <div class="form-group">
+                            <label for="password_strength-password">Password to Evaluate</label>
+                            <input type="password" id="password_strength-password" name="password" placeholder="Enter password to test..." required>
+                        </div>
+                        <button type="submit" class="btn-run">Evaluate Strength</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-jwt_decoder">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Decodes JSON Web Token (JWT) headers, claims, expiration, and JSON payloads keylessly without signatures verification.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>JWT Token</strong>: <code>eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIi...</code><br><strong>Output</strong>: Displays claims.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-jwt_decoder">
+                        <div class="form-group">
+                            <label for="jwt_decoder-jwt">JWT Token String</label>
+                            <textarea id="jwt_decoder-jwt" name="jwt" placeholder="Paste JWT (eyJhbGciOi...) string here..." required rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="btn-run">Decode JWT</button>
+                    </form>
+                </div>
+
+                
+                <div class="tool-panel" id="panel-lorem_ipsum">
+                    <div class="tool-description-block">
+                        <p class="tool-description">Generates customizable paragraphs of classic Lorem Ipsum placeholder text for designer layouts.</p>
+                        <div class="tool-usage-example">
+                            <strong>💡 Example / Usage:</strong>
+                            <p><strong>Paragraphs</strong>: <code>3</code><br><strong>Output</strong>: Returns 3 paragraphs of mock text.</p>
+                        </div>
+                    </div>
+                    <form class="tool-form" id="form-lorem_ipsum">
+                        <div class="form-group">
+                            <label for="lorem_ipsum-paragraphs">Number of Paragraphs</label>
+                            <input type="number" id="lorem_ipsum-paragraphs" name="paragraphs" placeholder="3" value="3" required>
+                        </div>
+                        <button type="submit" class="btn-run">Generate Text</button>
+                    </form>
+                </div>
+
+</section>
+</main>
+</div>
+
+<div class="modal-browser" id="file-browser-modal">
+<div class="modal-browser-content">
+<div class="modal-browser-header">
+<h3>📁 Select File or Directory</h3>
+<button class="modal-browser-close" id="btn-close-browser">×</button>
+</div>
+<div class="modal-browser-body">
+<div class="browser-path-container">
+<input id="browser-current-path" readonly="" type="text"/>
+<button class="btn-browser-action" id="btn-browser-up">⬆️ Parent Folder</button>
+</div>
+<div class="browser-items-list" id="browser-items">
+
+</div>
+</div>
+<div class="modal-browser-footer">
+<button class="btn-run" id="btn-browser-select">Select Current Directory</button>
+</div>
+</div>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+## 2024-06-22 - [Theme Customizer Accessibility]
+**Learning:** Custom interactive elements designed as decorative theme switchers often lack proper accessibility attributes and keyboard interactivity. Adding semantic roles (`role="button"`, `role="group"`), `tabindex="0"`, `aria-label`, and `aria-pressed` states makes them screen-reader friendly and keyboard navigable.
+**Action:** Always ensure that custom interactive UI elements, especially those acting as toggles or buttons (like `.theme-dot`), include appropriate ARIA roles, labels, dynamic states (`aria-pressed`), and mapped keyboard listeners (for `Enter` and `Space` keys).

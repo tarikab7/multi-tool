@@ -1,0 +1,3 @@
+## 2024-06-21 - Optimize directory traversal
+**Learning:** `os.listdir` followed by `os.path.isdir` results in many redundant `stat` system calls per file, creating a bottleneck for directories with a large number of files.
+**Action:** Use `os.scandir` for directory traversal whenever checking file types/attributes is required. It returns an iterator of `os.DirEntry` objects which cache file attributes directly and can be nearly 4x faster for large directories. Note: Since `os.scandir` yields unsorted entries, you will need to sort them manually if order is important.
