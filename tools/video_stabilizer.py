@@ -1,6 +1,7 @@
 import os
 import subprocess
 import asyncio
+from tools.ffmpeg_helper import run_ffmpeg_with_progress, get_media_duration
 
 async def run(params: dict):
     video_path = params.get("video_path", "").strip()
@@ -19,21 +20,39 @@ async def run(params: dict):
     cmd1 = ["ffmpeg", "-y", "-i", video_path, "-vf", "vidstabdetect=shakiness=10:accuracy=15:result=transforms.trf", "-f", "null", "-"]
     
     try:
-        proc1 = await asyncio.create_subprocess_exec(*cmd1, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        await proc1.communicate()
+        duration = await get_media_duration(video_path)
+        has_error = False
         
+        async for update in run_ffmpeg_with_progress(cmd1, duration):
+            if update["type"] == "error":
+                has_error = True
+                yield update
+            elif update["type"] == "progress":
+                yield {"type": "progress", "progress": update["progress"] / 2.0}
+            else:
+                yield update
+
+        if has_error:
+            return
+
         yield {"type": "log", "message": "Step 2: Re-rendering video frames with motion compensation..."}
         # Pass 2 of vidstab
         cmd2 = ["ffmpeg", "-y", "-i", video_path, "-vf", "vidstabtransform=smoothing=30:input=transforms.trf", output_path]
-        proc2 = await asyncio.create_subprocess_exec(*cmd2, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        stdout, stderr = await proc2.communicate()
+
+        async for update in run_ffmpeg_with_progress(cmd2, duration):
+            if update["type"] == "error":
+                has_error = True
+                yield update
+            elif update["type"] == "progress":
+                yield {"type": "progress", "progress": 50.0 + update["progress"] / 2.0}
+            else:
+                yield update
         
         if os.path.exists("transforms.trf"):
             os.remove("transforms.trf")
             
-        if proc2.returncode == 0:
+        if not has_error:
             yield {"type": "success", "message": f"Stabilized video written to: {output_path}"}
-        else:
-            yield {"type": "error", "message": f"Stabilizer failed: {stderr.decode()}"}
+
     except Exception as e:
         yield {"type": "error", "message": f"Error running stabilization: {str(e)}"}
